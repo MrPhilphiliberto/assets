@@ -25,14 +25,12 @@
     const SCENARIO_PRIYA_SAM = {
       channel: "#carlos",
       script: [
-        // 1) Priya asks for current performance (aggregate)
         {
           from: "priya",
           ts: "9:12 AM",
           text:
             '<span class="mention">@Carlos – Dark Wave</span> can you give me the current performance break down, across tactics?',
         },
-        // 2) Carlos returns descriptor (PLAIN TEXT — no code block background)
         {
           from: "carlos",
           ts: "9:13 AM",
@@ -62,14 +60,12 @@
 - Paid Social: 26.4% Conversions • 27.1% Spend • CPA: $34.60<br>
 - Programmatic: 17.2% Conversions • 20.3% Spend • CPA: $41.10`,
         },
-        // 3) Sam asks about Search Brand specifically
         {
           from: "sam",
           ts: "9:14 AM",
           text:
             "Thanks. Can you break down Brand Search's performance specifically within that?",
         },
-        // 4) Brand Search decomposition (PLAIN TEXT)
         {
           from: "carlos",
           ts: "9:14 AM",
@@ -87,13 +83,11 @@
 <strong>Trend</strong><br>
 CPA steady vs last 3 weeks (±2%), volume up ~6% w/w on stable spend.`,
         },
-        // 5) Priya asks for next week's forecast
         {
           from: "priya",
           ts: "9:15 AM",
           text: "Great. Please forecast next week for <em>Brand Search Exact</em> too.",
         },
-        // 6) Forecast summary + ONLY the line chart attachment
         {
           from: "carlos",
           ts: "9:15 AM",
@@ -113,29 +107,36 @@ Forecast week of <strong>08/24/2025</strong>.`,
       ],
     };
 
-    // 2) Naomi + Carlos: diagnostics only (heat map, histogram, scatter)
+    // 2) Naomi + Carlos: diagnostics only (heat map, histogram, scatter) — EXACT format from your single-scenario snippet
     const SCENARIO_NAOMI = {
       channel: "#analytics-lab",
       script: [
-        // Naomi asks for diagnostics
         {
           from: "naomi",
-          ts: "10:02 AM",
+          ts: "6:04 PM",
           text:
-            '<span class="mention">@Carlos – Dark Wave</span> share latest model diagnostics: correlation heat map, residual histogram, and the residuals vs fitted scatter.',
+            '<span class="mention">@Carlos – Dark Wave</span> can you evaluate drivers of performance on our total conversion volume?',
         },
-        // Carlos posts diagnostics (three attachments, no forecast image here)
         {
           from: "carlos",
-          ts: "10:03 AM",
-          text: `<strong>Model Diagnostics — Current Run</strong><br>
-- Correlation heat map highlights driver collinearity<br>
-- Residual histogram near-normal; light right skew<br>
-- Residuals vs fitted shows no strong heteroscedasticity`,
+          ts: "6:04 PM",
+          text: "On it. I'll be right back with my findings.",
+        },
+        {
+          from: "carlos",
+          ts: "6:05 PM",
+          text:
+            "Currently, Brand Search and Social tactics are driving conversions, while acquisition costs are climbing in Programmatic, suppressing our total conversion count.",
+        },
+        {
+          from: "carlos",
+          ts: "6:06 PM",
+          text:
+            "Here’s the distribution and correlation matrix, with a fairly accurate regression model fit. I'd recommend that we evaluate shifting budget into top performing tactics. Would you like a full budget optimization recommendation?",
           attachments: [
-            { url: ASSETS.corr, caption: "Correlation Heat Map" },
-            { url: ASSETS.hist, caption: "Residual Histogram" },
-            { url: ASSETS.scatter, caption: "Residuals vs Fitted Scatter" },
+            { url: ASSETS.hist, caption: "Histogram: Total Conversions" },
+            { url: ASSETS.corr, caption: "Correlation Matrix" },
+            { url: ASSETS.scatter, caption: "Predicted vs Actual Conversions" },
           ],
         },
       ],
@@ -238,7 +239,6 @@ Forecast week of <strong>08/24/2025</strong>.`,
           img.alt = "Carlos – Dark Wave";
           el.appendChild(img);
         } else {
-          // Initials for humans
           const initials =
             who === "sam" ? "S" :
             who === "priya" ? "P" :
@@ -277,7 +277,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
           item.from === "carlos" ? "Carlos – Dark Wave"
           : item.from === "sam" ? "Sam T."
           : item.from === "priya" ? "Priya N."
-          : item.from === "naomi" ? "Naomi K."
+          : item.from === "naomi" ? "Naomi I."
           : item.from;
         head.appendChild(nm);
 
@@ -324,9 +324,10 @@ Forecast week of <strong>08/24/2025</strong>.`,
       }
 
       // --- Sequenced playback across scenarios ---
-      const MESSAGE_DELAY = 2800;            // delay between messages
-      const BETWEEN_SCENARIOS_DELAY = 6000;  // longer gap between scenarios
-      const REFRESH_DELAY = 14000;           // longer pause before restarting at the top
+      const MESSAGE_DELAY = 2800;             // delay between messages
+      const BETWEEN_SCENARIOS_DELAY = 0;      // remove lag between scenarios
+      const SCENARIO_END_HOLD = 12000;        // longer hold before clearing & switching
+      const REFRESH_DELAY = 20000;            // (kept if you ever need a wrap pause)
 
       let scenarioIndex = 0, msgIndex = 0, started = false;
 
@@ -340,7 +341,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
       function playNextMessage() {
         const scenario = SCENARIOS[scenarioIndex];
         if (msgIndex >= scenario.script.length) {
-          // Scenario finished → wipe and move to next scenario (with gap)
+          // Scenario finished → HOLD, then wipe and immediately move to next (no inter-scenario lag)
           setTimeout(() => {
             scroll.innerHTML = "";
             resetThread();
@@ -350,11 +351,9 @@ Forecast week of <strong>08/24/2025</strong>.`,
             const nextScenario = SCENARIOS[scenarioIndex];
             setChannelUI(nextScenario.channel);
 
-            const pause =
-              scenarioIndex === 0 ? REFRESH_DELAY : BETWEEN_SCENARIOS_DELAY;
-
-            setTimeout(playNextMessage, pause);
-          }, BETWEEN_SCENARIOS_DELAY);
+            // Start next scenario immediately after the hold
+            setTimeout(playNextMessage, BETWEEN_SCENARIOS_DELAY);
+          }, SCENARIO_END_HOLD);
           return;
         }
 
@@ -388,3 +387,4 @@ Forecast week of <strong>08/24/2025</strong>.`,
     });
   });
 })();
+
