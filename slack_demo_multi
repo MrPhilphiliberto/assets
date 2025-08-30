@@ -12,81 +12,82 @@
       forecast:"https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/forecastor_pseudo.png"
     };
 
-    // Two scenarios in same #carlos channel
+    // Single scenario in #carlos (Priya + Sam + Carlos)
     const SCENARIOS = [
       {
         channel:"#carlos",
         script:[
-          { from:"sam",    ts:"6:04 PM",
-            text:'<span class="mention">@Carlos – Dark Wave</span> can you evaluate drivers of performance on our total conversion volume?' },
-          { from:"carlos", ts:"6:04 PM", text:"On it. I'll be right back with my findings." },
-          { from:"carlos", ts:"6:05 PM",
-            text:"Currently, Brand Search and Social tactics are driving conversions, while acquisition costs are climbing in Programmatic, suppressing our total conversion count." },
-          { from:"carlos", ts:"6:06 PM",
-            text:"Here’s the distribution and correlation matrix, with a fairly accurate regression model fit. I'd recommend that we evaluate shifting budget into top performing tactics. Would you like a full budget optimization recommendation?",
-            attachments:[
-              {url:ASSETS.hist,   caption:"Histogram: Total Conversions"},
-              {url:ASSETS.corr,   caption:"Correlation Matrix"},
-              {url:ASSETS.scatter,caption:"Predicted vs Actual Conversions"}
-            ]}
-        ]
-      },
-      {
-        channel:"#carlos",
-        script:[
-          { from:"priya",  ts:"9:12 AM",
-            text:'<span class="mention">@Carlos – Dark Wave</span> can you run a weekly performance roll-up by tactic bucket and show CPA trends?' },
-          { from:"carlos", ts:"9:12 AM",
-            text:"Running the analytics assistant… selecting the best-matching tactic bucket, aggregating weekly & monthly, and computing rolling CPAs." },
+          // 1) Priya asks for current performance (aggregate)
+          { from:"priya", ts:"9:12 AM",
+            text:'<span class="mention">@Carlos – Dark Wave</span> can you give me the current performance break down, across tactics?' },
+
+          // 2) Carlos returns descriptor (plain text)
           { from:"carlos", ts:"9:13 AM",
-            text:`<div class="code-block">📊 Performance Summary: All Tactics
-📅 Week of 08/17/2025:
-- Spend: $128,000
-- Total Checkout Starts: 4,210
-- Total Conversions: 1,980
-- CPA: $56.70
-  ↳ vs 3W MA: $54.10 (↑ 4.8%)
-  ↳ vs 6W MA: $53.40 (↑ 6.2%)
-  ↳ vs 12W MA: $55.20 (↑ 2.7%)
+            text:`<strong>📊 Performance Summary — All Tactics</strong><br>
+<strong>Week of 08/17/2025</strong><br>
+- Spend: $128,000<br>
+- Total Checkout Starts: 4,210<br>
+- Total Conversions: 1,980<br>
+- CPA: $56.70<br>
+↳ vs 3W MA: $54.10 (↑ 4.8%)<br>
+↳ vs 6W MA: $53.40 (↑ 6.2%)<br>
+↳ vs 12W MA: $55.20 (↑ 2.7%)<br><br>
 
-💡 Top 5 Tactics by Conversion Volume This Week (62% of Total Spend):
-1. Brand Search Exact — Conversions: 1,120 — Spend: $34,200 — CPA: $30.54
-2. Paid Social Prospecting — Conversions: 890 — Spend: $27,000 — CPA: $30.34
-3. Brand Search Broad — Conversions: 620 — Spend: $14,700 — CPA: $23.71
-4. Site Retargeting — Conversions: 410 — Spend: $12,500 — CPA: $30.49
-5. Programmatic Contextual — Conversions: 345 — Spend: $9,600 — CPA: $27.83
+<strong>Top 5 Tactics by Conversion Volume (62% of Spend)</strong><br>
+1) Brand Search Exact — Conversions: 1,120 — Spend: $34,200 — CPA: $30.54<br>
+2) Paid Social Prospecting — Conversions: 890 — Spend: $27,000 — CPA: $30.34<br>
+3) Brand Search Broad — Conversions: 620 — Spend: $14,700 — CPA: $23.71<br>
+4) Site Retargeting — Conversions: 410 — Spend: $12,500 — CPA: $30.49<br>
+5) Programmatic Contextual — Conversions: 345 — Spend: $9,600 — CPA: $27.83<br><br>
 
-📅 Monthly Summary (August 2025):
-- Spend: $502,000
-- Total Checkout Starts: 16,420
-- Total Conversions: 7,980
-- CPA: $58.90
-  ↳ vs 3M MA: $56.40 (↑ 4.4%)
-  ↳ vs 6M MA: $55.90 (↑ 5.4%)
-☠️👻 Performance Decomposition by Tactic Bucket: (abridged)
-- Brand Search: 34.2% Checkout Starts, 36.9% Conversions, 31.5% Spend, CPA: $31.40
-- Paid Social: 28.0% Checkout Starts, 26.4% Conversions, 27.1% Spend, CPA: $34.60
-- Programmatic: 18.5% Checkout Starts, 17.2% Conversions, 20.3% Spend, CPA: $41.10
-</div>` },
-          { from:"sam",    ts:"9:14 AM",
-            text:"Nice. Let’s forecast next week for the top tactic that you just identified." },
+<strong>Monthly (August 2025)</strong><br>
+- Spend: $502,000 — Conversions: 7,980 — CPA: $58.90<br>
+↳ vs 3M MA: $56.40 (↑ 4.4%) • vs 6M MA: $55.90 (↑ 5.4%)<br><br>
+
+<strong>Decomposition by Tactic Bucket (abridged)</strong><br>
+- Brand Search: 36.9% Conversions • 31.5% Spend • CPA: $31.40<br>
+- Paid Social: 26.4% Conversions • 27.1% Spend • CPA: $34.60<br>
+- Programmatic: 17.2% Conversions • 20.3% Spend • CPA: $41.10` },
+
+          // 3) Sam asks about Brand Search specifically
+          { from:"sam", ts:"9:14 AM",
+            text:"Thanks. Can you break down Brand Search's performance specifically within that?" },
+
+          // 4) Carlos gives Brand Search decomposition (plain text)
+          { from:"carlos", ts:"9:14 AM",
+            text:`<strong>🔎 Brand Search — Weekly Snapshot (Week of 08/17/2025)</strong><br>
+- Spend: $48,900<br>
+- Conversions: 1,740<br>
+- CPA: $28.10<br>
+- Share of Spend: 38% • Share of Conversions: 44%<br>
+- Efficiency vs. Aggregate CPA: 50.5% better (aggregate = $56.70)<br><br>
+
+<strong>Breakout</strong><br>
+• <em>Brand Search Exact</em> — Spend: $34,200 • Conversions: 1,120 • CPA: $30.54<br>
+• <em>Brand Search Broad</em> — Spend: $14,700 • Conversions: 620 • CPA: $23.71<br><br>
+
+<strong>Trend</strong><br>
+CPA steady vs last 3 weeks (±2%), volume up ~6% w/w on stable spend.` },
+
+          // 5) Priya asks for next week's forecast
+          { from:"priya", ts:"9:15 AM",
+            text:"Great. Please forecast next week for <em>Brand Search Exact</em> too." },
+
+          // 6) Carlos: forecast summary + plot
           { from:"carlos", ts:"9:15 AM",
-            text:`<div class="code-block">🔮 Forecast using 3W moving-average spend (exogenous):
-Tactic Selected: Brand Search Exact
-
-- Total Checkout Starts (t+1): 1,160.4
-- Total Conversions (t+1): 610.7
-- Avg Cost to Acquire (CPA): $29.85
-Forecast week of 08/24/2025.</div>`,
+            text:`<strong>🔮 Forecast — Brand Search Exact (t+1)</strong><br>
+Using a 3-week moving-average spend assumption:<br>
+- Total Checkout Starts (t+1): <strong>1,160.4</strong><br>
+- Total Conversions (t+1): <strong>610.7</strong><br>
+- Avg Cost to Acquire (CPA): <strong>$29.85</strong><br>
+Forecast week of <strong>08/24/2025</strong>.`,
             attachments:[
-              {url:ASSETS.forecast, caption:"Forecast vs Fitted (t+1)"},
+              {url:ASSETS.forecast, caption:"Forecast vs Fitted (t+1) — Brand Search Exact"},
               {url:ASSETS.corr,     caption:"Model Diagnostics (AIC-min SARIMAX)"}
-            ] },
-          { from:"priya",  ts:"9:15 AM",
-            text:"Perfect. Please prep a budget shift +10% to Brand Search Exact and draft a channel note." }
+            ] }
         ]
       }
-    ];
+    ]; // <-- properly close array + semicolon
 
     const mounts = document.querySelectorAll(".slack-demo");
     if(!mounts.length) return;
@@ -125,7 +126,7 @@ Forecast week of 08/24/2025.</div>`,
       const headerTitle  = mount.querySelector(".sd-header-title");
 
       // Jump-to-bottom (no auto-scroll)
-      function isAtBottom(){ return (scroll.scrollHeight - (scroll.scrollTop + scroll.clientHeight)) < 24; }
+      function isAtBottom(){ return (scroll.scrollHeight - (scroll.clientHeight + scroll.scrollTop)) < 24; }
       function updateJump(){ isAtBottom() ? jump.classList.remove("show") : jump.classList.add("show"); }
       function smoothToBottom(){
         const start = scroll.scrollTop;
@@ -140,6 +141,7 @@ Forecast week of 08/24/2025.</div>`,
       }
       jump.addEventListener("click", smoothToBottom);
       scroll.addEventListener("scroll", updateJump);
+      updateJump(); // initialize state
 
       // Thread reply counter (per scenario)
       let replyCount = 0, dividerEl = null, dividerLabelEl = null;
@@ -199,77 +201,4 @@ Forecast week of 08/24/2025.</div>`,
         const meta = document.createElement("span"); meta.className="meta"; meta.textContent=item.ts||"";
         head.appendChild(meta);
 
-        const p = document.createElement("p"); p.className="body-text"; p.innerHTML=item.text;
-        content.appendChild(head); content.appendChild(p);
-
-        if(item.attachments){
-          item.attachments.forEach(a=>{
-            const card = document.createElement("div"); card.className="attach";
-            const img  = document.createElement("img");
-            img.loading="lazy"; img.src=a.url; img.alt=a.caption||"Attachment";
-            const cap  = document.createElement("div"); cap.className="attach-cap"; cap.textContent=a.caption||"";
-            card.appendChild(img); card.appendChild(cap); content.appendChild(card);
-          });
-        }
-
-        row.appendChild(content); scroll.appendChild(row);
-        requestAnimationFrame(()=> row.classList.add("show"));
-        updateJump();
-      }
-
-      // Sequenced playback: Scenario 1 then Scenario 2
-      const MESSAGE_DELAY = 3000;
-      const BETWEEN_SCENARIOS_DELAY = 1200;
-      const REFRESH_DELAY = 6000;
-
-      let scenarioIndex = 0, msgIndex = 0, started = false;
-
-      function setChannelUI(channel){
-        chanLabel.textContent = channel;
-        headerTitle.textContent = `${channel} • Dark Wave Marketing Science`;
-      }
-
-      function playNextMessage(){
-        const scenario = SCENARIOS[scenarioIndex];
-        if(msgIndex >= scenario.script.length){
-          setTimeout(()=>{
-            scroll.innerHTML = "";
-            resetThread();
-            msgIndex = 0;
-
-            scenarioIndex = (scenarioIndex + 1) % SCENARIOS.length;
-            const nextScenario = SCENARIOS[scenarioIndex];
-            setChannelUI(nextScenario.channel);
-
-            const pause = (scenarioIndex === 0) ? REFRESH_DELAY : BETWEEN_SCENARIOS_DELAY;
-            setTimeout(playNextMessage, pause);
-          }, BETWEEN_SCENARIOS_DELAY);
-          return;
-        }
-        addMsg(scenario.script[msgIndex++]);
-        setTimeout(playNextMessage, MESSAGE_DELAY);
-      }
-
-      function startIfVisible(){
-        if(started) return;
-        started = true;
-        setChannelUI(SCENARIOS[scenarioIndex].channel);
-        playNextMessage();
-      }
-
-      if("IntersectionObserver" in window){
-        const io = new IntersectionObserver((entries)=>{
-          entries.forEach(e=>{
-            if(e.isIntersecting && e.intersectionRatio >= 0.35){
-              startIfVisible();
-              io.disconnect();
-            }
-          });
-        }, {threshold:[0,0.2,0.35,0.6,1]});
-        io.observe(mount);
-      } else {
-        setTimeout(startIfVisible, 1000);
-      }
-    });
-  });
-})();
+        const p = document.createElement("p"); p.className="
