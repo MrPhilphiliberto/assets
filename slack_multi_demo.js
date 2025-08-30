@@ -109,7 +109,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
     // 2) Naomi + Carlos: diagnostics only (heat map, histogram, scatter) — EXACT format from your single-scenario snippet
     const SCENARIO_NAOMI = {
-      channel: "#analytics-lab",
+      channel: "#carlos",
       script: [
         {
           from: "naomi",
