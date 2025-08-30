@@ -1,3 +1,4 @@
+
 // slack-demo.js
 (function () {
   // Wait until the page is ready (safer for Carrd)
@@ -19,24 +20,23 @@
         "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/forecastor_pseudo.png",
     };
 
-    // Single scenario in #carlos
-    const SCENARIOS = [
-      {
-        channel: "#carlos",
-        script: [
-          // 1) Priya asks for current performance (aggregate)
-          {
-            from: "priya",
-            ts: "9:12 AM",
-            text:
-              '<span class="mention">@Carlos – Dark Wave</span> can you give me the current performance break down, across tactics?',
-          },
-
-          // 2) Carlos returns descriptor (PLAIN TEXT — no code block background)
-          {
-            from: "carlos",
-            ts: "9:13 AM",
-            text: `<strong>📊 Performance Summary — All Tactics</strong><br>
+    // --- SCENARIOS ---
+    // 1) Priya + Sam + Carlos: only the forecast line chart at the end
+    const SCENARIO_PRIYA_SAM = {
+      channel: "#carlos",
+      script: [
+        // 1) Priya asks for current performance (aggregate)
+        {
+          from: "priya",
+          ts: "9:12 AM",
+          text:
+            '<span class="mention">@Carlos – Dark Wave</span> can you give me the current performance break down, across tactics?',
+        },
+        // 2) Carlos returns descriptor (PLAIN TEXT — no code block background)
+        {
+          from: "carlos",
+          ts: "9:13 AM",
+          text: `<strong>📊 Performance Summary — All Tactics</strong><br>
 <strong>Week of 08/17/2025</strong><br>
 - Spend: $128,000<br>
 - Total Checkout Starts: 4,210<br>
@@ -61,21 +61,19 @@
 - Brand Search: 36.9% Conversions • 31.5% Spend • CPA: $31.40<br>
 - Paid Social: 26.4% Conversions • 27.1% Spend • CPA: $34.60<br>
 - Programmatic: 17.2% Conversions • 20.3% Spend • CPA: $41.10`,
-          },
-
-          // 3) Sam asks about Search Brand specifically
-          {
-            from: "sam",
-            ts: "9:14 AM",
-            text:
-              "Thanks. Can you break down Brand Search's performance specifically within that?",
-          },
-
-          // 4) Brand Search decomposition (PLAIN TEXT)
-          {
-            from: "carlos",
-            ts: "9:14 AM",
-            text: `<strong>🔎 Brand Search — Weekly Snapshot (Week of 08/17/2025)</strong><br>
+        },
+        // 3) Sam asks about Search Brand specifically
+        {
+          from: "sam",
+          ts: "9:14 AM",
+          text:
+            "Thanks. Can you break down Brand Search's performance specifically within that?",
+        },
+        // 4) Brand Search decomposition (PLAIN TEXT)
+        {
+          from: "carlos",
+          ts: "9:14 AM",
+          text: `<strong>🔎 Brand Search — Weekly Snapshot (Week of 08/17/2025)</strong><br>
 - Spend: $48,900<br>
 - Conversions: 1,740<br>
 - CPA: $28.10<br>
@@ -88,46 +86,69 @@
 
 <strong>Trend</strong><br>
 CPA steady vs last 3 weeks (±2%), volume up ~6% w/w on stable spend.`,
-          },
-
-          // 5) Priya asks for next week's forecast
-          {
-            from: "priya",
-            ts: "9:15 AM",
-            text:
-              "Great. Please forecast next week for <em>Brand Search Exact</em> too.",
-          },
-
-          // 6) Forecast summary + plot
-          {
-            from: "carlos",
-            ts: "9:15 AM",
-            text: `<strong>🔮 Forecast — Brand Search Exact (t+1)</strong><br>
+        },
+        // 5) Priya asks for next week's forecast
+        {
+          from: "priya",
+          ts: "9:15 AM",
+          text: "Great. Please forecast next week for <em>Brand Search Exact</em> too.",
+        },
+        // 6) Forecast summary + ONLY the line chart attachment
+        {
+          from: "carlos",
+          ts: "9:15 AM",
+          text: `<strong>🔮 Forecast — Brand Search Exact (t+1)</strong><br>
 Using a 3-week moving-average spend assumption:<br>
 - Total Checkout Starts (t+1): <strong>1,160.4</strong><br>
 - Total Conversions (t+1): <strong>610.7</strong><br>
 - Avg Cost to Acquire (CPA): <strong>$29.85</strong><br>
 Forecast week of <strong>08/24/2025</strong>.`,
-            attachments: [
-              {
-                url: ASSETS.forecast,
-                caption: "Forecast vs Fitted (t+1) — Brand Search Exact",
-              },
-              {
-                url: ASSETS.corr,
-                caption: "Model Diagnostics (AIC-min SARIMAX)",
-              },
-            ],
-          },
-        ],
-      },
-    ]; // end SCENARIOS
+          attachments: [
+            {
+              url: ASSETS.forecast,
+              caption: "Forecast vs Fitted (t+1) — Brand Search Exact",
+            },
+          ],
+        },
+      ],
+    };
 
+    // 2) Naomi + Carlos: diagnostics only (heat map, histogram, scatter)
+    const SCENARIO_NAOMI = {
+      channel: "#analytics-lab",
+      script: [
+        // Naomi asks for diagnostics
+        {
+          from: "naomi",
+          ts: "10:02 AM",
+          text:
+            '<span class="mention">@Carlos – Dark Wave</span> share latest model diagnostics: correlation heat map, residual histogram, and the residuals vs fitted scatter.',
+        },
+        // Carlos posts diagnostics (three attachments, no forecast image here)
+        {
+          from: "carlos",
+          ts: "10:03 AM",
+          text: `<strong>Model Diagnostics — Current Run</strong><br>
+- Correlation heat map highlights driver collinearity<br>
+- Residual histogram near-normal; light right skew<br>
+- Residuals vs fitted shows no strong heteroscedasticity`,
+          attachments: [
+            { url: ASSETS.corr, caption: "Correlation Heat Map" },
+            { url: ASSETS.hist, caption: "Residual Histogram" },
+            { url: ASSETS.scatter, caption: "Residuals vs Fitted Scatter" },
+          ],
+        },
+      ],
+    };
+
+    const SCENARIOS = [SCENARIO_PRIYA_SAM, SCENARIO_NAOMI];
+
+    // ---- Mount + UI Shell ----
     const mounts = document.querySelectorAll(".slack-demo");
     if (!mounts.length) return;
 
     mounts.forEach((mount) => {
-      // Static shell
+      // Static chrome
       mount.innerHTML = [
         '<div class="sd-sidebar">',
         '<div class="sd-org">🪐</div>',
@@ -159,21 +180,17 @@ Forecast week of <strong>08/24/2025</strong>.`,
       const chanLabel = mount.querySelector(".sd-chan-label");
       const headerTitle = mount.querySelector(".sd-header-title");
 
-      // Jump-to-bottom (no auto-scroll)
+      // --- Jump-to-bottom ---
       function isAtBottom() {
-        return scroll.scrollHeight - (scroll.scrollTop + scroll.clientHeight) <
-          24;
+        return scroll.scrollHeight - (scroll.scrollTop + scroll.clientHeight) < 24;
       }
       function updateJump() {
-        isAtBottom()
-          ? jump.classList.remove("show")
-          : jump.classList.add("show");
+        isAtBottom() ? jump.classList.remove("show") : jump.classList.add("show");
       }
       function smoothToBottom() {
         const start = scroll.scrollTop;
         const end = scroll.scrollHeight - scroll.clientHeight;
-        const dur = 600,
-          t0 = performance.now();
+        const dur = 600, t0 = performance.now();
         function anim(t) {
           const p = Math.min((t - t0) / dur, 1);
           scroll.scrollTop = start + (end - start) * p;
@@ -185,10 +202,8 @@ Forecast week of <strong>08/24/2025</strong>.`,
       jump.addEventListener("click", smoothToBottom);
       scroll.addEventListener("scroll", updateJump);
 
-      // Thread reply counter (per scenario)
-      let replyCount = 0,
-        dividerEl = null,
-        dividerLabelEl = null;
+      // --- Thread reply counter (per scenario) ---
+      let replyCount = 0, dividerEl = null, dividerLabelEl = null;
       function resetThread() {
         replyCount = 0;
         dividerEl = null;
@@ -210,10 +225,10 @@ Forecast week of <strong>08/24/2025</strong>.`,
       }
       function updateDivider() {
         if (!dividerEl) return;
-        dividerLabelEl.textContent =
-          replyCount === 1 ? "1 reply" : `${replyCount} replies`;
+        dividerLabelEl.textContent = replyCount === 1 ? "1 reply" : `${replyCount} replies`;
       }
 
+      // --- Avatars ---
       const avatar = (who) => {
         const el = document.createElement("div");
         el.className = "avatar";
@@ -223,13 +238,19 @@ Forecast week of <strong>08/24/2025</strong>.`,
           img.alt = "Carlos – Dark Wave";
           el.appendChild(img);
         } else {
-          el.textContent = who === "sam" ? "S" : who === "priya" ? "P" : "?";
+          // Initials for humans
+          const initials =
+            who === "sam" ? "S" :
+            who === "priya" ? "P" :
+            who === "naomi" ? "N" : "?";
+          el.textContent = initials;
         }
         return el;
       };
 
+      // --- Message add ---
       function addMsg(item) {
-        // Divider + counter only for Carlos
+        // Divider + counter only for Carlos messages
         if (item.from === "carlos") {
           if (!dividerEl) {
             replyCount = 1;
@@ -247,25 +268,26 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
         const content = document.createElement("div");
         content.className = "msg-content";
+
         const head = document.createElement("div");
         head.className = "head";
         const nm = document.createElement("span");
         nm.className = "name";
         nm.textContent =
-          item.from === "carlos"
-            ? "Carlos – Dark Wave"
-            : item.from === "sam"
-            ? "Sam T."
-            : item.from === "priya"
-            ? "Priya N."
-            : item.from;
+          item.from === "carlos" ? "Carlos – Dark Wave"
+          : item.from === "sam" ? "Sam T."
+          : item.from === "priya" ? "Priya N."
+          : item.from === "naomi" ? "Naomi K."
+          : item.from;
         head.appendChild(nm);
+
         if (item.from === "carlos") {
           const app = document.createElement("span");
           app.className = "app-badge";
           app.textContent = "APP";
           head.appendChild(app);
         }
+
         const meta = document.createElement("span");
         meta.className = "meta";
         meta.textContent = item.ts || "";
@@ -274,6 +296,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
         const p = document.createElement("p");
         p.className = "body-text";
         p.innerHTML = item.text;
+
         content.appendChild(head);
         content.appendChild(p);
 
@@ -300,24 +323,24 @@ Forecast week of <strong>08/24/2025</strong>.`,
         updateJump();
       }
 
-      // Sequenced playback (single scenario; loop with refresh)
-      const MESSAGE_DELAY = 3000;
-      const BETWEEN_SCENARIOS_DELAY = 1200;
-      const REFRESH_DELAY = 6000;
+      // --- Sequenced playback across scenarios ---
+      const MESSAGE_DELAY = 2800;            // delay between messages
+      const BETWEEN_SCENARIOS_DELAY = 6000;  // longer gap between scenarios
+      const REFRESH_DELAY = 14000;           // longer pause before restarting at the top
 
-      let scenarioIndex = 0,
-        msgIndex = 0,
-        started = false;
+      let scenarioIndex = 0, msgIndex = 0, started = false;
 
       function setChannelUI(channel) {
-        chanLabel.textContent = channel;
-        headerTitle.textContent = `${channel} • Dark Wave Marketing Science`;
+        const label = mount.querySelector(".sd-chan-label");
+        const title = mount.querySelector(".sd-header-title");
+        if (label) label.textContent = channel;
+        if (title) title.textContent = `${channel} • Dark Wave Marketing Science`;
       }
 
       function playNextMessage() {
         const scenario = SCENARIOS[scenarioIndex];
         if (msgIndex >= scenario.script.length) {
-          // after scenario ends: wipe and loop
+          // Scenario finished → wipe and move to next scenario (with gap)
           setTimeout(() => {
             scroll.innerHTML = "";
             resetThread();
@@ -329,10 +352,12 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
             const pause =
               scenarioIndex === 0 ? REFRESH_DELAY : BETWEEN_SCENARIOS_DELAY;
+
             setTimeout(playNextMessage, pause);
           }, BETWEEN_SCENARIOS_DELAY);
           return;
         }
+
         addMsg(scenario.script[msgIndex++]);
         setTimeout(playNextMessage, MESSAGE_DELAY);
       }
