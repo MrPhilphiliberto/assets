@@ -124,6 +124,7 @@
       <div class="wave w1" aria-hidden="true"></div>
       <div class="wave w2" aria-hidden="true"></div>
       <div class="wave w3" aria-hidden="true"></div>
+      <div class="wave foam" aria-hidden="true"></div>
     </div>
   </div>
 
