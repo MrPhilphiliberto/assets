@@ -1,29 +1,23 @@
-/*! Dark Wave Marketing Science – Animated HTML5 Hero (Refined)
- *  Minimal bootloader that injects HTML and wires interactions.
- *  Usage in Carrd:
- *    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/USER/REPO@TAG/home_running_dark.css">
- *    <script defer src="https://cdn.jsdelivr.net/gh/USER/REPO@TAG/home_running_dark.js" data-html="https://cdn.jsdelivr.net/gh/USER/REPO@TAG/home_running_dark.html"></script>
- *    <script>window.DWMSHero && DWMSHero.init({ targetLink: "https://carlos.darkwavemarketing.science", skipBehavior: "hide" });</script>
- */
+/*! Dark Wave Marketing Science – Animated HTML5 Hero (Refined) */
 (function(){
   'use strict';
 
   var DEFAULTS = {
     targetLink: "https://carlos.darkwavemarketing.science",
-    skipBehavior: "hide",        // "hide" or "link"
+    skipBehavior: "hide",   // "hide" or "link"
     autoRedirect: false,
     autoRedirectDelay: 900,
-    htmlUrl: null                // optional override; otherwise read from script[data-html]
+    htmlUrl: null           // override or use <script data-html="...">
   };
 
   function qs(root, sel){ return (root || document).querySelector(sel); }
 
   function ensureStageInserted(opts){
-    // If stage already present, use it
+    // Already present?
     var stage = qs(document, '#dwmsStage');
     if (stage) return Promise.resolve(stage);
 
-    // Try to get HTML URL from init opts or script tag data attribute
+    // Determine HTML URL
     var script = (function(){
       var scripts = document.getElementsByTagName('script');
       for (var i=scripts.length-1; i>=0; i--) {
@@ -34,15 +28,43 @@
 
     var htmlUrl = (opts && opts.htmlUrl) || (script && script.dataset && script.dataset.html);
 
-    if (!htmlUrl) {
-      // Fallback: minimal inline template (keeps things working even without .html file)
-      var tmp = document.createElement('div');
-      tmp.innerHTML = '<div class="dwms-stage" id="dwmsStage"><div class="sky"></div><div class="sun"></div><div class="water" id="water"><div class="waves"><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div></div><svg class="boat bob" viewBox="0 0 220 130"><path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)"/><rect x="120" y="58" width="36" height="24" rx="2" fill="var(--boat-mid)"/><rect x="96" y="32" width="4" height="40" fill="var(--boat-mid)"/><path d="M100 72 C110 58, 130 52, 146 54 L146 72 Z" fill="var(--boat-mid)" opacity=".9"/></svg><svg class="boat-reflection" viewBox="0 0 220 130" aria-hidden="true"><path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)" opacity=".22"/></svg><div class="spotlight"></div><a class="banner" id="dwmsBanner" href="#"><span>Running Dark</span><span>Launching Soon</span></a><button class="skip" id="dwmsSkip">Enter →</button></div>';
-      document.body.appendChild(tmp.firstChild);
-      return Promise.resolve(qs(document, '#dwmsStage'));
+    // Fallback minimal template (valid DOM, not just text)
+    var injectFallback = function(){
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML =
+        '<div class="dwms-stage" id="dwmsStage">' +
+          '<div class="sky"></div>' +
+          '<div class="sun"></div>' +
+          '<div class="water" id="water">' +
+            '<div class="waves">' +
+              '<div class="wave w1"></div>' +
+              '<div class="wave w2"></div>' +
+              '<div class="wave w3"></div>' +
+            '</div>' +
+          '</div>' +
+          '<svg class="boat bob" viewBox="0 0 220 130">' +
+            '<path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)"></path>' +
+            '<rect x="120" y="58" width="36" height="24" rx="2" fill="var(--boat-mid)"></rect>' +
+            '<rect x="96" y="32" width="4" height="40" fill="var(--boat-mid)"></rect>' +
+            '<path d="M100 72 C110 58, 130 52, 146 54 L146 72 Z" fill="var(--boat-mid)" opacity=".9"></path>' +
+          '</svg>' +
+          '<svg class="boat-reflection" viewBox="0 0 220 130" aria-hidden="true">' +
+            '<path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)" opacity=".22"></path>' +
+          '</svg>' +
+          '<div class="spotlight"></div>' +
+          '<a class="banner" id="dwmsBanner" href="#"><span>Running Dark</span><span>Launching Soon</span></a>' +
+          '<button class="skip" id="dwmsSkip">Enter →</button>' +
+        '</div>';
+      var node = wrapper.firstElementChild;
+      document.body.appendChild(node);
+      return node;
+    };
+
+    if (!htmlUrl){
+      return Promise.resolve(injectFallback());
     }
 
-    // Fetch and inject external HTML
+    // Fetch external HTML and inject
     return fetch(htmlUrl, { credentials: 'omit' })
       .then(function(res){ return res.text(); })
       .then(function(html){
@@ -54,8 +76,8 @@
         return node;
       })
       .catch(function(err){
-        console.error('[DWMSHero] Failed to fetch HTML, falling back to inline template:', err);
-        return ensureStageInserted({ htmlUrl: null }); // fallback
+        console.error('[DWMSHero] Failed to fetch HTML, falling back:', err);
+        return injectFallback();
       });
   }
 
@@ -98,7 +120,7 @@
     if (boat)    boat.addEventListener('animationend', onSailEnd, { once:true });
     if (boatRef) boatRef.addEventListener('animationend', function(){}, { once:true });
 
-    // Fallback if animations blocked
+    // Fallback if animations are blocked
     setTimeout(function(){
       if (banner && getComputedStyle(banner).opacity === '0'){
         stage.classList.add('dusk');
@@ -117,8 +139,7 @@
     }
   };
 
-  // Auto-boot with defaults if developer forgets to call init()
-  // Uses data-* attributes if provided.
+  // Auto-boot with defaults if init() not called
   document.addEventListener('DOMContentLoaded', function(){
     if (!window.__DWMS_BOOTED__) {
       window.__DWMS_BOOTED__ = true;
