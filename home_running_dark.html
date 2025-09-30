@@ -1,0 +1,46 @@
+<div class="dwms-stage" id="dwmsStage" aria-label="Dark waves fill the screen at dusk; a boat with warm lights crosses and reveals a banner reading Running Dark – Launching Soon.">
+  <div class="sky" aria-hidden="true"></div>
+  <div class="sun" aria-hidden="true"></div>
+
+  <div class="water" id="water">
+    <div class="waves">
+      <div class="wave w1" aria-hidden="true"></div>
+      <div class="wave w2" aria-hidden="true"></div>
+      <div class="wave w3" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Boat silhouette -->
+  <svg class="boat bob" viewBox="0 0 220 130" aria-label="Boat silhouette with warm lights">
+    <path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)"/>
+    <rect x="120" y="58" width="36" height="24" rx="2" fill="var(--boat-mid)"/>
+    <rect x="96" y="32" width="4" height="40" fill="var(--boat-mid)"/>
+    <path d="M100 72 C110 58, 130 52, 146 54 L146 72 Z" fill="var(--boat-mid)" opacity=".9"/>
+    <g class="glow">
+      <circle class="porthole" cx="56" cy="98" r="3"/><circle class="porthole" cx="72" cy="98" r="3"/>
+      <circle class="porthole" cx="88" cy="98" r="3"/><circle class="porthole" cx="104" cy="98" r="3"/>
+    </g>
+    <circle class="glow" cx="152" cy="68" r="3" fill="var(--light)"/>
+  </svg>
+
+  <!-- Reflection -->
+  <svg class="boat-reflection" viewBox="0 0 220 130" aria-hidden="true">
+    <path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)" opacity=".22"/>
+    <rect x="120" y="58" width="36" height="24" rx="2" fill="var(--boat-mid)" opacity=".18"/>
+    <rect x="96" y="32" width="4" height="40" fill="var(--boat-mid)" opacity=".18"/>
+    <path d="M100 72 C110 58, 130 52, 146 54 L146 72 Z" fill="var(--boat-mid)" opacity=".16"/>
+    <g opacity=".2"><circle cx="56" cy="98" r="3" fill="var(--light)"/><circle cx="72" cy="98" r="3" fill="var(--light)"/><circle cx="88" cy="98" r="3" fill="var(--light)"/><circle cx="104" cy="98" r="3" fill="var(--light)"/></g>
+  </svg>
+
+  <!-- Spotlight -->
+  <div class="spotlight" aria-hidden="true"></div>
+
+  <!-- Banner CTA -->
+  <a class="banner" id="dwmsBanner" href="#" aria-label="Go to Carlos">
+    <span>Running Dark</span>
+    <span>Launching Soon</span>
+  </a>
+
+  <!-- Skip / Enter -->
+  <button class="skip" id="dwmsSkip" aria-label="Skip animation or enter">Enter →</button>
+</div>
