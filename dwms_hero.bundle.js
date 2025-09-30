@@ -29,15 +29,64 @@
 @keyframes fillUp{0%{height:0vh}100%{height:42vh}}
 .water::before{content:"";position:absolute;left:-20%;right:-20%;top:-2px;height:16px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.06),rgba(255,255,255,0));filter:blur(1px) opacity(.5);mix-blend-mode:screen;animation:horizon 8s ease-in-out infinite;}
 @keyframes horizon{0%,100%{transform:translateX(0)}50%{transform:translateX(24px)}}
-.waves{position:absolute;left:0;right:0;bottom:-2vh;height:54vh;transform:translateY(6px);animation:bob 4.2s ease-in-out infinite;will-change:transform;}
-@keyframes bob{0%,100%{transform:translateY(6px)}50%{transform:translateY(0)}}
-.wave{position:absolute;left:-25%;width:150%;height:22vh;opacity:.92;background-repeat:repeat-x;background-size:1200px 100%;mask-image:linear-gradient(to top,rgba(0,0,0,1) 55%,rgba(0,0,0,.12) 100%);will-change:transform;}
-.wave.w1{bottom:2vh;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBhMWUyYSIgZD0iTTAgMTIwYzYwIDAgMTIwLTQwIDI0MC00MHMxODAgNDAgMzAwIDQwIDE4MC00MCAzMDAtNDAgMTgwIDQwIDM2MCA0MHY4MEgweiIvPjwvc3ZnPg==');animation:sway1 8s ease-in-out infinite;}
-.wave.w2{bottom:6vh;opacity:.98;filter:brightness(1.04);background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBkMjczNSIgZD0iTTAgMTIwYzgwIDAgMTYwLTMwIDI0MC0zMHMxNjAgMzAgMjQwIDMwIDE2MC0zMCAyNDAtMzAgMTYwIDMwIDI0MCAzMCAxNjAtMzAgMjQwLTMwdjExMEgweiIvPjwvc3ZnPg==');animation:sway2 10s ease-in-out infinite;}
-.wave.w3{bottom:10vh;opacity:1;filter:brightness(1.08);background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzEwMzA0MSIgZD0iTTAgMTIwYzkwIDAgMTgwLTI1IDI3MC0yNXMxODAgMjUgMjcwIDI1IDE4MC0yNSAyNzAtMjUgMTgwIDI1IDI3MCAyNSAxODAtMjUgMjcwLTI1djEzMEgweiIvPjwvc3ZnPg==');animation:sway3 13s ease-in-out infinite;}
+/* Waves: parallax sway with slight bob */
+.waves{
+  position:absolute; left:0; right:0; bottom:-2vh; height:56vh;
+  transform:translateY(6px);
+  animation:bob 4.2s ease-in-out infinite;
+  will-change:transform;
+}
+/* soft shadow horizon to avoid “rectangles” look */
+.waves::after{
+  content:""; position:absolute; left:-10%; right:-10%; top:0; height:10vh;
+  background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,0));
+  pointer-events:none;
+}
+
+@keyframes bob{ 0%,100%{transform:translateY(6px)} 50%{transform:translateY(0)} }
+
+.wave{
+  position:absolute; left:-30%; width:160%; height:24vh; /* a bit wider to hide seams */
+  opacity:.92;
+  background-repeat:repeat-x;
+  background-size:1800px 100%;            /* larger tile reduces visible repeats */
+  mask-image:linear-gradient(to top, rgba(0,0,0,1) 55%, rgba(0,0,0,.12) 100%);
+  will-change:transform, background-position;
+}
+
+/* Deep, mid, top layers */
+.wave.w1{
+  bottom:2vh;
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBhMWUyYSIgZD0iTTAgMTIwYzYwIDAgMTIwLTQwIDI0MC00MHMxODAgNDAgMzAwIDQwIDE4MC00MCAzMDAtNDAgMTgwIDQwIDM2MCA0MHY4MEgweiIvPjwvc3ZnPg==');
+  animation:sway1 8s ease-in-out infinite;
+  filter:brightness(1);
+}
+
+.wave.w2{
+  bottom:6.2vh; opacity:.98; filter:brightness(1.04);
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBkMjczNSIgZD0iTTAgMTIwYzgwIDAgMTYwLTMwIDI0MC0zMHMxNjAgMzAgMjQwIDMwIDE2MC0zMCAyNDAtMzAgMTYwIDMwIDI0MCAzMCAxNjAtMzAgMjQwLTMwdjExMEgweiIvPjwvc3ZnPg==');
+  animation:sway2 10s ease-in-out infinite;
+}
+
+.wave.w3{
+  bottom:10.5vh; opacity:1; filter:brightness(1.08);
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzEwMzA0MSIgZD0iTTAgMTIwYzkwIDAgMTgwLTI1IDI3MC0yNXMxODAgMjUgMjcwIDI1IDE4MC0yNSAyNzAtMjUgMTgwIDI1IDI3MCAyNSAxODAtMjUgMjcwLTI1djEzMEgweiIvPjwvc3ZnPg==');
+  animation:sway3 13s ease-in-out infinite;
+}
+
+/* New: foam crest riding the top wave */
+.wave.foam{
+  bottom:11.2vh; height:9vh; opacity:.35; mix-blend-mode:screen;
+  filter:blur(.6px);
+  background-size:1800px 100%;
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTAgMTIwYzkwIDAgMTgwLTI1IDI3MC0yNXMxODAgMjUgMjcwIDI1IDE4MC0yNSAyNzAtMjUgMTgwIDI1IDI3MCAyNSAxODAtMjUgMjcwLTI1djEwMEgweiIvPjwvc3ZnPg==');
+  animation:sway3 12.5s ease-in-out infinite;
+}
+
 @keyframes sway1{0%,100%{transform:translateX(0)}50%{transform:translateX(30px)}}
 @keyframes sway2{0%,100%{transform:translateX(0)}50%{transform:translateX(-38px)}}
 @keyframes sway3{0%,100%{transform:translateX(0)}50%{transform:translateX(48px)}}
+
 .boat,.boat-reflection{position:absolute;z-index:6;right:-32vmin;width:30vmin;height:17vmin;filter:drop-shadow(0 6px 6px rgba(0,0,0,.5));opacity:0;will-change:transform,opacity;animation:sailAcross 20s ease-in-out 3.6s forwards;}
 .boat{bottom:calc(42vh - 5vmin);}
 .boat-reflection{bottom:calc(42vh - 5vmin);transform:scaleY(-1) translateY(-6vmin);opacity:0;filter:blur(2px) drop-shadow(0 0 0 transparent);mask-image:linear-gradient(to bottom,rgba(0,0,0,.35),rgba(0,0,0,0) 65%);animation:sailAcrossRef 20s ease-in-out 3.6s forwards;}
