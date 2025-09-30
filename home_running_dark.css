@@ -1,14 +1,8 @@
 :root{
-  --navy:#0b1522;         /* deeper base */
-  --ink:#f2f5f7;
-  --wave1:#0a1e2a;        /* deepest */
-  --wave2:#0d2735;        /* mid */
-  --wave3:#103041;        /* top */
-  --foam:#8fb7d6;         /* ultra subtle horizon shimmer */
-  --boat-dark:#0b0d10;
-  --boat-mid:#20252b;
-  --light:#ffd54a;
-  --spotlight-fade:rgba(255,213,74,0);
+  --navy:#0b1522; --ink:#f2f5f7;
+  --wave1:#0a1e2a; --wave2:#0d2735; --wave3:#103041;
+  --foam:#8fb7d6; --boat-dark:#0b0d10; --boat-mid:#20252b;
+  --light:#ffd54a; --spotlight-fade:rgba(255,213,74,0);
 }
 
 /* Stage fills the viewport (fullscreen overlay) */
@@ -17,7 +11,7 @@
   width:100vw;height:100vh; overflow:hidden;
   background:transparent; color:var(--ink);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-  pointer-events:auto; /* block clicks to page while overlay shows */
+  pointer-events:auto;
 }
 
 /* Gentle sky that cools toward dusk */
@@ -71,10 +65,7 @@
   mix-blend-mode:screen;
   animation:horizon 8s ease-in-out infinite;
 }
-@keyframes horizon{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(24px)}
-}
+@keyframes horizon{ 0%,100%{transform:translateX(0)} 50%{transform:translateX(24px)} }
 
 /* Waves: parallax sway with slight bob */
 .waves{ position:absolute; left:0; right:0; bottom:-2vh; height:54vh;
@@ -88,16 +79,21 @@
   mask-image:linear-gradient(to top, rgba(0,0,0,1) 55%, rgba(0,0,0,.12) 100%);
   will-change:transform;
 }
-.wave.w1{ bottom:2vh;
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="%230a1e2a" d="M0 120c60 0 120-40 240-40s180 40 300 40 180-40 300-40 180 40 360 40v80H0z"/></svg>');
+
+/* Base64-encoded SVGs so GitHub/JSDelivr don’t strip content */
+.wave.w1{
+  bottom:2vh;
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBhMWUyYSIgZD0iTTAgMTIwYzYwIDAgMTIwLTQwIDI0MC00MHMxODAgNDAgMzAwIDQwIDE4MC00MCAzMDAtNDAgMTgwIDQwIDM2MCA0MHY4MEgweiIvPjwvc3ZnPg==');
   animation:sway1 8s ease-in-out infinite;
 }
-.wave.w2{ bottom:6vh; opacity:.98; filter:brightness(1.04);
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="%230d2735" d="M0 120c80 0 160-30 240-30s160 30 240 30 160-30 240-30 160 30 240 30 160-30 240-30v110H0z"/></svg>');
+.wave.w2{
+  bottom:6vh; opacity:.98; filter:brightness(1.04);
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzBkMjczNSIgZD0iTTAgMTIwYzgwIDAgMTYwLTMwIDI0MC0zMHMxNjAgMzAgMjQwIDMwIDE2MC0zMCAyNDAtMzAgMTYwIDMwIDI0MCAzMCAxNjAtMzAgMjQwLTMwdjExMEgweiIvPjwvc3ZnPg==');
   animation:sway2 10s ease-in-out infinite;
 }
-.wave.w3{ bottom:10vh; opacity:1; filter:brightness(1.08);
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><path fill="%23103041" d="M0 120c90 0 180-25 270-25s180 25 270 25 180-25 270-25 180 25 270 25 180-25 270-25v130H0z"/></svg>');
+.wave.w3{
+  bottom:10vh; opacity:1; filter:brightness(1.08);
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDIwMCI+PHBhdGggZmlsbD0iIzEwMzA0MSIgZD0iTTAgMTIwYzkwIDAgMTgwLTI1IDI3MC0yNXMxODAgMjUgMjcwIDI1IDE4MC0yNSAyNzAtMjUgMTgwIDI1IDI3MCAyNSAxODAtMjUgMjcwLTI1djEzMEgweiIvPjwvc3ZnPg==');
   animation:sway3 13s ease-in-out infinite;
 }
 @keyframes sway1{0%,100%{transform:translateX(0)}50%{transform:translateX(30px)}}
@@ -114,7 +110,7 @@
 .boat{ bottom:calc(42vh - 5vmin); }
 .boat-reflection{
   bottom:calc(42vh - 5vmin);
-  transform:scaleY(-1) translateY(-6vmin); /* flip under the waterline */
+  transform:scaleY(-1) translateY(-6vmin);
   opacity:0;
   filter:blur(2px) drop-shadow(0 0 0 transparent);
   mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0) 65%);
@@ -145,10 +141,7 @@
   transform-origin:right center; mix-blend-mode:screen;
   animation:sweep 5.6s ease-in-out infinite alternate 5s;
 }
-@keyframes sweep{
-  0%{transform:rotate(-7deg)}
-  100%{transform:rotate(-2deg)}
-}
+@keyframes sweep{ 0%{transform:rotate(-7deg)} 100%{transform:rotate(-2deg)} }
 
 /* CTA banner */
 .banner{
@@ -164,7 +157,7 @@
 }
 .banner span:first-child{ font-size:clamp(20px,3.4vmin,38px); opacity:.98 }
 .banner span:last-child{  font-size:clamp(14px,2.2vmin,22px); opacity:.88; font-weight:700 }
-.banner:hover{ background:linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.56)); border-color:rgba(255,255,255,.22); transform:translateX(0) translateY(-1px) }
+.banner:hover{ background:linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.56)); border-color:rgba(255,255,255,.22); transform:translateY(-1px) }
 
 @keyframes pullIn{
   0%{opacity:0; right:-62vw}
