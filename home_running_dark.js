@@ -120,7 +120,8 @@
     70%  { transform: translateX(-78vw) translateY(0.6vmin); }
     100% { transform: translateX(-115vw) translateY(0); opacity: .9; }
   }
-  .boat .bob { animation: bob 3.6s ease-in-out infinite; }
+  .boat.bob { animation: bob 3.6s ease-in-out infinite; }
+
 
   /* Spotlight – a cone with gradient fade */
   .spotlight {
@@ -258,7 +259,8 @@
 
     // Deepen dusk overlay once water fill completes (feels like sunset as water rises)
     var water = document.getElementById('water');
-    water.addEventListener('animationend', function(){ stage.classList.add('dusk'); }, { once: true }); }, { once: true });
+    water.addEventListener('animationend', function(){ stage.classList.add('dusk'); }, { once: true });
+
 
     // When the boat completes its sail, optionally auto-redirect; otherwise ensure CTA is visible
     boat.addEventListener('animationend', function(){
