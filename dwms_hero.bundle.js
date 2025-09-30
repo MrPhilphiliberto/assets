@@ -1,4 +1,4 @@
-/*! Dark Wave Marketing Science – Hero (Bundle v2: SVG Ocean) */
+/*! Dark Wave Marketing Science – Hero (Bundle v3: Horizon Caps + Foreground Band) */
 (function(){
   'use strict';
 
@@ -12,13 +12,17 @@
   /* ===== CSS ===== */
   var CSS = `
 :root{
-  --navy:#0b1522; --ink:#f2f5f7;
-  --wave1:#0a1e2a; --wave2:#0d2735; --wave3:#103041;
+  --ink:#f2f5f7;
+  /* complementary dark blues */
+  --wave1:#071d30;   /* deepest back */
+  --wave2:#0a2942;   /* mid */
+  --wave3:#0d3552;   /* top/horizon */
+  --wave-fore:#06263f; /* foreground band */
   --boat-dark:#0b0d10; --boat-mid:#20252b; --light:#ffd54a;
   --spotlight-fade:rgba(255,213,74,0);
 }
 
-/* Stage / dusk / sun (unchanged) */
+/* Stage / dusk / sun */
 .dwms-stage{position:fixed;inset:0;z-index:9999;width:100vw;height:100vh;overflow:hidden;background:transparent;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;pointer-events:auto;}
 .dwms-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120vw 80vh at 80% 0%,rgba(0,0,0,0) 0%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.6) 100%);opacity:0;transition:opacity 1.8s ease-out;}
 .dwms-stage.dusk::after{opacity:.9;}
@@ -26,25 +30,36 @@
 .sun{position:absolute;top:6vh;right:10vw;z-index:2;width:10vmin;height:10vmin;border-radius:50%;background:radial-gradient(circle at 45% 45%,rgba(255,248,220,.95),rgba(255,248,220,.55) 60%,rgba(255,248,220,0) 70%);filter:drop-shadow(0 0 18px rgba(255,244,200,.25));animation:sunSet 10s ease-in forwards 1.25s;}
 @keyframes sunSet{0%{transform:translateY(0);opacity:.9}70%{transform:translateY(22vh);opacity:.35}100%{transform:translateY(26vh);opacity:0}}
 
-/* Water fill (unchanged) */
+/* Water fill */
 .water{position:absolute;left:0;right:0;bottom:0;height:0vh;z-index:4;overflow:hidden;background:linear-gradient(180deg,rgba(7,20,34,.9),rgba(3,10,18,.98));animation:fillUp 6.5s cubic-bezier(.2,.7,.1,1) forwards .7s;}
 @keyframes fillUp{0%{height:0vh}100%{height:42vh}}
-/* subtle shimmer on the waterline */
 .water::before{content:"";position:absolute;left:-20%;right:-20%;top:-2px;height:14px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.06),rgba(255,255,255,0));mix-blend-mode:screen;filter:blur(1px);}
 
-/* NEW: single SVG ocean (replaces tiled .waves) */
+/* SVG ocean (inside .water) */
 .ocean{position:absolute;left:-20vw;right:-20vw;bottom:-2vh;height:56vh;width:140vw;z-index:5;pointer-events:none;}
 .ocean .layer path{will-change:transform;}
 .ocean .back   {animation:drift1 16s ease-in-out infinite;}
 .ocean .mid    {animation:drift2 12s ease-in-out infinite;}
 .ocean .top    {animation:drift3 9s  ease-in-out infinite;}
 .ocean .foam   {mix-blend-mode:screen;opacity:.35;filter:blur(.5px);animation:drift3 9s ease-in-out infinite;}
+/* Rounded foam caps along the horizon */
+.ocean .caps circle{
+  fill:#ffffff; opacity:.22; mix-blend-mode:screen; filter:blur(.4px);
+  animation:crestBob 6s ease-in-out infinite;
+}
+@keyframes crestBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.2px)}}
 
 @keyframes drift1{0%,100%{transform:translateX(0)}50%{transform:translateX(30px)}}
 @keyframes drift2{0%,100%{transform:translateX(0)}50%{transform:translateX(-38px)}}
 @keyframes drift3{0%,100%{transform:translateX(0)}50%{transform:translateX(48px)}}
 
-/* Boat, reflection, spotlight, banner (as before) */
+/* Foreground band (sits IN FRONT of the boat) */
+.ocean-fore{position:absolute;left:-20vw;right:-20vw;bottom:-1.2vh;height:22vh;width:140vw;z-index:8;pointer-events:none;}
+.ocean-fore .band{animation:drift4 7.5s ease-in-out infinite;}
+.ocean-fore .foam{mix-blend-mode:screen;opacity:.25;filter:blur(.6px);animation:drift4 7.5s ease-in-out infinite;}
+@keyframes drift4{0%,100%{transform:translateX(0)}50%{transform:translateX(-36px)}}
+
+/* Boat & reflection */
 .boat,.boat-reflection{position:absolute;z-index:6;right:-32vmin;width:30vmin;height:17vmin;filter:drop-shadow(0 6px 6px rgba(0,0,0,.5));opacity:0;animation:sailAcross 20s ease-in-out 3.6s forwards;will-change:transform,opacity;}
 .boat{bottom:calc(42vh - 5vmin);}
 .boat-reflection{bottom:calc(42vh - 5vmin);transform:scaleY(-1) translateY(-6vmin);opacity:0;filter:blur(2px) drop-shadow(0 0 0 transparent);mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0) 65%);animation:sailAcrossRef 20s ease-in-out 3.6s forwards;}
@@ -53,6 +68,7 @@
 .boat.bob{animation:bob 3.6s ease-in-out infinite;}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 
+/* Spotlight, banner */
 .spotlight{position:absolute;right:8vmin;bottom:6.5vmin;width:38vmin;height:13vmin;background:conic-gradient(from 200deg at 0% 50%, var(--light), rgba(255,213,74,.55) 25%, rgba(255,213,74,.22) 45%, var(--spotlight-fade) 60%);clip-path:polygon(0% 42%, 100% 0%, 100% 100%);opacity:.28;filter:blur(1px);transform-origin:right center;mix-blend-mode:screen;animation:sweep 5.6s ease-in-out infinite alternate 5s;}
 @keyframes sweep{0%{transform:rotate(-7deg)}100%{transform:rotate(-2deg)}}
 
@@ -69,7 +85,7 @@
 .skip:hover{background:rgba(0,0,0,.72);border-color:rgba(255,255,255,.36);transform:translateY(-1px)}
 
 @media (prefers-reduced-motion: reduce){
-  .sun,.water,.ocean,.boat,.boat-reflection,.banner,.spotlight{animation:none !important}
+  .sun,.water,.ocean,.ocean-fore,.boat,.boat-reflection,.banner,.spotlight{animation:none !important}
   .dwms-stage::after{opacity:.75}
   .water{height:42vh}
   .boat{opacity:.96;transform:translateX(-55vw)}
@@ -77,44 +93,40 @@
 }
 `;
 
-  /* ===== HTML =====
-     Note: we REMOVED the old .waves structure
-     and added an <svg class="ocean"> with layered paths. */
+  /* ===== HTML ===== */
   var HTML = `
 <div class="dwms-stage" id="dwmsStage" aria-label="Dark waves fill the screen at dusk; a boat with warm lights crosses and reveals a banner reading Running Dark – Launching Soon.">
   <div class="sky" aria-hidden="true"></div>
   <div class="sun" aria-hidden="true"></div>
 
   <div class="water" id="water">
+    <!-- Ocean (back/mid/top + foam + rounded caps) -->
     <svg class="ocean" viewBox="0 0 2400 400" preserveAspectRatio="none" aria-hidden="true">
-      <!-- back layer -->
       <g class="layer back">
-        <path fill="var(--wave1)" d="M0 260
-          Q150 220 300 260 T600 260 T900 260 T1200 260 T1500 260 T1800 260 T2100 260 T2400 260
-          L2400 400 L0 400 Z"/>
+        <path fill="var(--wave1)" d="M0 260 Q150 220 300 260 T600 260 T900 260 T1200 260 T1500 260 T1800 260 T2100 260 T2400 260 L2400 400 L0 400 Z"/>
       </g>
-      <!-- mid layer -->
       <g class="layer mid">
-        <path fill="var(--wave2)" d="M0 240
-          Q150 205 300 240 T600 240 T900 240 T1200 240 T1500 240 T1800 240 T2100 240 T2400 240
-          L2400 400 L0 400 Z"/>
+        <path fill="var(--wave2)" d="M0 240 Q150 205 300 240 T600 240 T900 240 T1200 240 T1500 240 T1800 240 T2100 240 T2400 240 L2400 400 L0 400 Z"/>
       </g>
-      <!-- top layer -->
       <g class="layer top">
-        <path fill="var(--wave3)" d="M0 222
-          Q150 198 300 222 T600 222 T900 222 T1200 222 T1500 222 T1800 222 T2100 222 T2400 222
-          L2400 400 L0 400 Z"/>
+        <path fill="var(--wave3)" d="M0 222 Q150 198 300 222 T600 222 T900 222 T1200 222 T1500 222 T1800 222 T2100 222 T2400 222 L2400 400 L0 400 Z"/>
       </g>
-      <!-- foam crest -->
       <g class="foam">
-        <path fill="#ffffff" d="M0 218
-          Q150 196 300 218 T600 218 T900 218 T1200 218 T1500 218 T1800 218 T2100 218 T2400 218
-          L2400 230 L0 230 Z"/>
+        <path fill="#ffffff" d="M0 218 Q150 196 300 218 T600 218 T900 218 T1200 218 T1500 218 T1800 218 T2100 218 T2400 218 L2400 230 L0 230 Z"/>
+      </g>
+      <!-- Rounded crest caps along the horizon -->
+      <g class="caps">
+        <!-- evenly spaced small circles near the top crest -->
+        <circle cx="100"  cy="214" r="12"/><circle cx="250"  cy="212" r="10"/><circle cx="400"  cy="214" r="12"/>
+        <circle cx="550"  cy="212" r="10"/><circle cx="700"  cy="214" r="12"/><circle cx="850"  cy="212" r="10"/>
+        <circle cx="1000" cy="214" r="12"/><circle cx="1150" cy="212" r="10"/><circle cx="1300" cy="214" r="12"/>
+        <circle cx="1450" cy="212" r="10"/><circle cx="1600" cy="214" r="12"/><circle cx="1750" cy="212" r="10"/>
+        <circle cx="1900" cy="214" r="12"/><circle cx="2050" cy="212" r="10"/><circle cx="2200" cy="214" r="12"/>
       </g>
     </svg>
   </div>
 
-  <!-- Boat silhouette -->
+  <!-- Boat -->
   <svg class="boat bob" viewBox="0 0 220 130" aria-label="Boat silhouette with warm lights">
     <path d="M10 90 L190 90 L165 110 L35 110 Z" fill="var(--boat-dark)"/>
     <rect x="120" y="58" width="36" height="24" rx="2" fill="var(--boat-mid)"/>
@@ -134,6 +146,16 @@
     <rect x="96" y="32" width="4" height="40" fill="var(--boat-mid)" opacity=".18"/>
     <path d="M100 72 C110 58, 130 52, 146 54 L146 72 Z" fill="var(--boat-mid)" opacity=".16"/>
     <g opacity=".2"><circle cx="56" cy="98" r="3" fill="var(--light)"/><circle cx="72" cy="98" r="3" fill="var(--light)"/><circle cx="88" cy="98" r="3" fill="var(--light)"/><circle cx="104" cy="98" r="3" fill="var(--light)"/></g>
+  </svg>
+
+  <!-- Foreground wave band (over the boat for depth) -->
+  <svg class="ocean-fore" viewBox="0 0 2400 220" preserveAspectRatio="none" aria-hidden="true">
+    <g class="band">
+      <path fill="var(--wave-fore)" d="M0 120 Q150 90 300 120 T600 120 T900 120 T1200 120 T1500 120 T1800 120 T2100 120 T2400 120 L2400 220 L0 220 Z"/>
+    </g>
+    <g class="foam">
+      <path fill="#ffffff" d="M0 116 Q150 86 300 116 T600 116 T900 116 T1200 116 T1500 116 T1800 116 T2100 116 T2400 116 L2400 132 L0 132 Z"/>
+    </g>
   </svg>
 
   <div class="spotlight" aria-hidden="true"></div>
