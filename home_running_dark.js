@@ -4,20 +4,18 @@
 
   var DEFAULTS = {
     targetLink: "https://carlos.darkwavemarketing.science",
-    skipBehavior: "hide",   // "hide" or "link"
+    skipBehavior: "hide",
     autoRedirect: false,
     autoRedirectDelay: 900,
-    htmlUrl: null           // override or use <script data-html="...">
+    htmlUrl: null
   };
 
   function qs(root, sel){ return (root || document).querySelector(sel); }
 
   function ensureStageInserted(opts){
-    // Already present?
     var stage = qs(document, '#dwmsStage');
     if (stage) return Promise.resolve(stage);
 
-    // Determine HTML URL
     var script = (function(){
       var scripts = document.getElementsByTagName('script');
       for (var i=scripts.length-1; i>=0; i--) {
@@ -28,7 +26,6 @@
 
     var htmlUrl = (opts && opts.htmlUrl) || (script && script.dataset && script.dataset.html);
 
-    // Fallback minimal template (valid DOM, not just text)
     var injectFallback = function(){
       var wrapper = document.createElement('div');
       wrapper.innerHTML =
@@ -64,7 +61,6 @@
       return Promise.resolve(injectFallback());
     }
 
-    // Fetch external HTML and inject
     return fetch(htmlUrl, { credentials: 'omit' })
       .then(function(res){ return res.text(); })
       .then(function(html){
@@ -120,7 +116,6 @@
     if (boat)    boat.addEventListener('animationend', onSailEnd, { once:true });
     if (boatRef) boatRef.addEventListener('animationend', function(){}, { once:true });
 
-    // Fallback if animations are blocked
     setTimeout(function(){
       if (banner && getComputedStyle(banner).opacity === '0'){
         stage.classList.add('dusk');
@@ -131,7 +126,6 @@
     }, 7000);
   }
 
-  // Public API
   window.DWMSHero = {
     init: function(options){
       var cfg = Object.assign({}, DEFAULTS, options || {});
@@ -139,7 +133,6 @@
     }
   };
 
-  // Auto-boot with defaults if init() not called
   document.addEventListener('DOMContentLoaded', function(){
     if (!window.__DWMS_BOOTED__) {
       window.__DWMS_BOOTED__ = true;
