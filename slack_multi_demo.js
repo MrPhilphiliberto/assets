@@ -33,7 +33,12 @@
     return out;
   }
 
-  const DEMOS = getRegistry();
+  // Lazy demo lookup so we always see any scenarios registered
+  // by other scripts, even if they load after this file.
+  function getDemos() {
+    return getRegistry();
+  }
+
 
   function emojiFor(name) {
     switch (name) {
@@ -423,8 +428,10 @@
     if (desktop) mounts.push(setupMount(desktop));
     if (mobile) mounts.push(setupMount(mobile));
 
+
     // Determine which modes actually have demos defined
-    const modeKeys = MODES.filter((m) => DEMOS[m.key]).map((m) => m.key);
+    const demosNow = getDemos();
+    const modeKeys = MODES.filter((m) => demosNow[m.key]).map((m) => m.key);
     if (!modeKeys.length) return null;
 
     const state = {
@@ -440,6 +447,7 @@
       tabEls: [],
       autoplayToggleEl: null,
     };
+
 
     // Build single mode bar for this wrap (above both desktop & mobile)
     const firstDemo = desktop || mobile;
@@ -478,14 +486,15 @@
 
     const right = document.createElement("div");
     right.className = "sd-mode-right";
-    const label = document.createElement("span");
-    label.textContent = "Autoplay";
-    const toggle = document.createElement("div");
-    toggle.className = "sd-autoplay-toggle on";
-    toggle.innerHTML = '<div class="sd-autoplay-toggle-knob"></div>';
-    state.autoplayToggleEl = toggle;
 
-    toggle.addEventListener("click", () => {
+    // Play / pause rectangular button (sand → navy when on/off)
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sd-autoplay-btn on";
+    btn.innerHTML = '<span class="sd-autoplay-icon">⏸</span>';
+    state.autoplayToggleEl = btn;
+
+    btn.addEventListener("click", () => {
       state.autoplayOn = !state.autoplayOn;
       updateAutoplayToggle(state);
       if (state.autoplayOn) {
@@ -497,11 +506,11 @@
       }
     });
 
-    right.appendChild(label);
-    right.appendChild(toggle);
+    right.appendChild(btn);
 
     modeBar.appendChild(tabList);
     modeBar.appendChild(right);
+
 
     wrapEl.insertBefore(modeBar, firstDemo);
 
@@ -533,13 +542,17 @@
   }
 
   function updateAutoplayToggle(state) {
-    if (!state.autoplayToggleEl) return;
+    const btn = state.autoplayToggleEl;
+    if (!btn) return;
     if (state.autoplayOn) {
-      state.autoplayToggleEl.classList.add("on");
+      btn.classList.add("on");
+      btn.innerHTML = '<span class="sd-autoplay-icon">⏸</span>';
     } else {
-      state.autoplayToggleEl.classList.remove("on");
+      btn.classList.remove("on");
+      btn.innerHTML = '<span class="sd-autoplay-icon">▶</span>';
     }
   }
+
 
   function clearTimers(state) {
     state.timers.forEach((t) => clearTimeout(t));
@@ -564,7 +577,8 @@
   }
 
   function switchToMode(state, modeKey) {
-    const demo = DEMOS[modeKey];
+    const demosNow = getDemos();
+    const demo = demosNow[modeKey];
     if (!demo) return;
 
     clearTimers(state);
