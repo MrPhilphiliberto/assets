@@ -4,10 +4,17 @@
 (function () {
   "use strict";
 
-  // Static assets for this scenario (paths will be transformed to URLs by the host)
+  // Static assets for this scenario (hosted on GitHub)
   const ASSETS = {
-    surveyCsv: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/mailer_aware_survey_response.csv",
-    liftPlot: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/figure_post_1.png",
+    // Raw CSV used in the example
+    surveyCsv:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/mailer_aware_survey_response.csv",
+    // Plot output from the snippet run
+    liftPlot:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/figure_post_1.png",
+    // Screenshot of the Slack CSV upload preview
+    csvPreview:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/snippet_csv_preview.png",
   };
 
   /**
@@ -46,7 +53,15 @@
         note: "Click to expand inline (2,002 lines)",
         url: ASSETS.surveyCsv,
       },
-      reactions: ["eyes", "white_check_mark"],
+      // 👀 → ⏳ → ✅ flow
+      reactions: ["eyes", "hourglass_flowing_sand", "white_check_mark"],
+      // Append the CSV upload screenshot as a visual preview
+      attachments: [
+        {
+          url: ASSETS.csvPreview,
+          caption: "mailer_aware_survey_response.csv — Slack preview",
+        },
+      ],
     },
 
     {
@@ -158,6 +173,7 @@ Z-test for Awareness - Z-score: 9.584470197434868, P-value: 2.647646709993892e-2
           ["control", 0, 0],
         ],
         note: "Click to expand inline (2,002 lines)",
+        url: ASSETS.surveyCsv,
       },
     },
 
@@ -187,7 +203,7 @@ Z-test for Awareness - Z-score: 9.584470197434868, P-value: 2.647646709993892e-2
         "Z-test for Favorability - Z-score: 6.860998355146238, P-value: 9.088688177636136e-12\n" +
         "Z-test for Awareness - Z-score: 9.584470197434868, P-value: 2.647646709993892e-21" +
         "</code></pre>",
-      reactions: ["eyes", "white_check_mark"],
+      reactions: ["eyes", "hourglass_flowing_sand", "white_check_mark"],
     },
 
     {
@@ -206,8 +222,8 @@ Z-test for Awareness - Z-score: 9.584470197434868, P-value: 2.647646709993892e-2
 
   // Register scenario on the shared registry that slack_multi_demo.js reads.
   window.DWMS_DEMO_REGISTRY = window.DWMS_DEMO_REGISTRY || {};
-  window.DWMS_DEMO_REGISTRY.snippet = {
-    id: "snippet",
+  window.DWMS_DEMO_REGISTRY.snippet_runner = {
+    id: "snippet_runner",
     tabLabel: "Bespoke Workflows",
     channel: "#carlos",
     participants: {
