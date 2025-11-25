@@ -1,13 +1,17 @@
 // forecaster_demo.js
 // Scenario spec for the "Advanced Forecasting" (Forecaster) demo.
-// A parent script is expected to render the Slack-like UI and play this script.
+// The shared multi-demo wrapper will read this from DWMS_DEMO_REGISTRY.forecaster.
 
 (function () {
   "use strict";
 
-  // Static assets for this scenario (the hosting layer will convert this path to a URL)
+  // Static assets for this scenario (hosted on GitHub)
   const ASSETS = {
-    forecastRevenue: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/forecaster_time_series%20plot.png",
+    forecastRevenue:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/forecaster_time_series%20plot.png",
+    // Reuse the same CSV upload screenshot as the Explainer demo
+    csvPreview:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/explainer_csv_preview.png",
   };
 
   /**
@@ -224,7 +228,15 @@
           ],
         ],
       },
-      reactions: ["eyes", "white_check_mark"],
+      // 👀 → ⏳ → ✅ reaction flow for the multi-demo wrapper
+      reactions: ["eyes", "hourglass_flowing_sand", "white_check_mark"],
+      // Show the CSV upload as a Slack-style screenshot
+      attachments: [
+        {
+          url: ASSETS.csvPreview,
+          caption: "sales_macro_2024-2025_to_date.csv — Slack preview",
+        },
+      ],
     },
 
     {
