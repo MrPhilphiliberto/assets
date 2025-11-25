@@ -11,7 +11,7 @@
       "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/forecaster_time_series%20plot.png",
     // Reuse the same CSV upload screenshot as the Explainer demo
     csvPreview:
-      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/explainer_csv_preview.png",
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/explainer_csv_preview.png"
   };
 
   /**
@@ -52,7 +52,7 @@
           "RetailSales_YoY",
           "MacroDemandIndex",
           "MacroCostIndex",
-          "AOV",
+          "AOV"
         ],
         rows: [
           [
@@ -72,7 +72,7 @@
             0.032,
             0.8264933234677144,
             1.1722904213280814,
-            50.91,
+            50.91
           ],
           [
             "2024-01-02",
@@ -91,7 +91,7 @@
             0.030241176420087914,
             0.839417412720443,
             1.2579247078509246,
-            49.81,
+            49.81
           ],
           [
             "2024-01-03",
@@ -110,7 +110,7 @@
             0.03206464838041088,
             0.9552815744414712,
             1.2299871688608157,
-            51.78,
+            51.78
           ],
           [
             "2024-01-04",
@@ -129,7 +129,7 @@
             0.030964978811229896,
             0.9146249712985897,
             1.4474796538893715,
-            51.84,
+            51.84
           ],
           [
             "2024-01-05",
@@ -148,7 +148,7 @@
             0.03448963822404129,
             0.9656986301261921,
             1.434260279701481,
-            56.12,
+            56.12
           ],
           [
             "2024-01-06",
@@ -167,7 +167,7 @@
             0.03766987668706094,
             0.9197443634839116,
             1.3348918933781455,
-            50.76,
+            50.76
           ],
           [
             "2024-01-07",
@@ -186,7 +186,7 @@
             0.03472628285718648,
             0.827542027992662,
             1.3159665447386024,
-            50.53,
+            50.53
           ],
           [
             "2024-01-08",
@@ -205,7 +205,7 @@
             0.033578992193604565,
             0.798429052620329,
             1.5241040620780877,
-            50.92,
+            50.92
           ],
           [
             "2024-01-09",
@@ -224,9 +224,9 @@
             0.030314915307242805,
             0.7003387062091817,
             1.5498915809729072,
-            51.62,
-          ],
-        ],
+            51.62
+          ]
+        ]
       },
       // 👀 → ⏳ → ✅ reaction flow for the multi-demo wrapper
       reactions: ["eyes", "hourglass_flowing_sand", "white_check_mark"],
@@ -234,9 +234,9 @@
       attachments: [
         {
           url: ASSETS.csvPreview,
-          caption: "sales_macro_2024-2025_to_date.csv — Slack preview",
-        },
-      ],
+          caption: "sales_macro_2024-2025_to_date.csv — Slack preview"
+        }
+      ]
     },
 
     {
@@ -247,8 +247,8 @@
       text: "Forecast — Controls  ·  adjust settings or export",
       controls: {
         primary: "Controls",
-        secondary: "Save & Export",
-      },
+        secondary: "Save & Export"
+      }
     },
 
     {
@@ -259,8 +259,8 @@
       text:
         "Forecasts ready ✅<br><br>" +
         "🧠 Summary<br>" +
-        'The forecast for Sales Revenue indicates a predicted value of yhat "9,946,131.2" for the next period, specifically the week starting on date "2025-07-06", with a prediction interval of pi "8,299,662.0–11,592,600.5". The model selected is the ENSEMBLE_s6, which shows strong performance metrics with a smape of "8.2", mase of "1.04", and rmse of "1,201,161.9". Seasonality has been applied with a period of 6, indicating that the model has sufficient historical data to support this decision. All models converge on the forecast, and the Ljung–Box test indicates residual autocorrelation is present, with a ljung_box_p of "0.00". The exogenous variable used in the model is "Spend", transformed with a moving average of 3 and no lag, which aligns with the guidance to select a variable that drives the target without being synonymous with it.<br><br>" +
-        "See less",
+        `The forecast for Sales Revenue indicates a predicted value of yhat "9,946,131.2" for the next period, specifically the week starting on date "2025-07-06", with a prediction interval of pi "8,299,662.0–11,592,600.5". The model selected is the ENSEMBLE_s6, which shows strong performance metrics with a smape of "8.2", mase of "1.04", and rmse of "1,201,161.9". Seasonality has been applied with a period of 6, indicating that the model has sufficient historical data to support this decision. All models converge on the forecast, and the Ljung–Box test indicates residual autocorrelation is present, with a ljung_box_p of "0.00". The exogenous variable used in the model is "Spend", transformed with a moving average of 3 and no lag, which aligns with the guidance to select a variable that drives the target without being synonymous with it.<br><br>` +
+        "See less"
     },
 
     {
@@ -272,9 +272,9 @@
       attachments: [
         {
           url: ASSETS.forecastRevenue,
-          caption: "Sales Revenue — Forecast (Next Week)",
-        },
-      ],
+          caption: "Sales Revenue — Forecast (Next Week)"
+        }
+      ]
     },
 
     {
@@ -283,7 +283,7 @@
       ts: "10:15 AM",
       text:
         "Thanks! Could you simplify the summary for me a bit? I'm not very familiar with all of these terms.",
-      reactions: ["eyes", "white_check_mark"],
+      reactions: ["eyes", "white_check_mark"]
     },
 
     {
@@ -292,8 +292,8 @@
       ts: "10:15 AM",
       type: "summary",
       text:
-        'Sure! For the first week of July 2025, we expect sales revenue to be around $9.95 million, with a possible range between $8.30 million and $11.59 million. The best forecasting method used is called "ENSEMBLE_s6," which has a good accuracy score. However, there are some patterns in the data that suggest we might need to look closer at the results.',
-    },
+        'Sure! For the first week of July 2025, we expect sales revenue to be around $9.95 million, with a possible range between $8.30 million and $11.59 million. The best forecasting method used is called "ENSEMBLE_s6," which has a good accuracy score. However, there are some patterns in the data that suggest we might need to look closer at the results.'
+    }
   ];
 
   // Register scenario on a global container for the parent wrapper.
@@ -306,13 +306,13 @@
       diego: {
         displayName: "Diego M.",
         fullName: "Diego Morales",
-        role: "user",
+        role: "user"
       },
       carlos: {
         displayName: "Carlos – Dark Wave",
-        role: "app",
-      },
+        role: "app"
+      }
     },
-    script: SCRIPT,
+    script: SCRIPT
   };
 })();
