@@ -1,197 +1,193 @@
-
-// slack-demo.js
+// slack_multi_demo.js
 (function () {
-  // Wait until the page is ready (safer for Carrd)
+  // Simple DOM ready, works well in Carrd
   function ready(fn) {
-    /in/.test(document.readyState) ? setTimeout(() => ready(fn), 9) : fn();
+    /in/.test(document.readyState) ? setTimeout(function () { ready(fn); }, 9) : fn();
   }
 
   ready(function () {
+    // Avatar for Carlos
     const ASSETS = {
       carlosAvatar:
-        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/ChatGPT%20Image%20Jul%2028%2C%202025%2C%2005_10_59%20PM.png",
-      corr:
-        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/plot_phase1_turn1.png",
-      hist:
-        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/plot_phase5_turn22.png",
-      scatter:
-        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/plot_phase7_turn30.png",
-      forecast:
-        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/forecastor_pseudo.png",
+        "https://raw.githubusercontent.com/MrPhilphiliberto/assets/refs/heads/main/ChatGPT%20Image%20Jul%2028%2C%202025%2C%2005_10_59%20PM.png"
     };
 
-    // --- SCENARIOS ---
-    // 1) Priya + Sam + Carlos: only the forecast line chart at the end
-    const SCENARIO_PRIYA_SAM = {
-      channel: "#carlos",
-      script: [
-        {
-          from: "priya",
-          ts: "9:12 AM",
-          text:
-            '<span class="mention">@Carlos – Dark Wave</span> can you give me the current performance break down, across tactics?',
-        },
-        {
-          from: "carlos",
-          ts: "9:13 AM",
-          text: `<strong>📊 Performance Summary — All Tactics</strong><br>
-<strong>Week of 08/17/2025</strong><br>
-- Spend: $128,000<br>
-- Total Checkout Starts: 4,210<br>
-- Total Conversions: 1,980<br>
-- CPA: $56.70<br>
-↳ vs 3W MA: $54.10 (↑ 4.8%)<br>
-↳ vs 6W MA: $53.40 (↑ 6.2%)<br>
-↳ vs 12W MA: $55.20 (↑ 2.7%)<br><br>
+    // Modes <-> demo keys
+    const MODES = [
+      { id: "descriptor", labelMain: "Performance Analytics", labelSub: "Descriptor" },
+      { id: "explainer",  labelMain: "Driver Identification", labelSub: "Explainer" },
+      { id: "forecaster", labelMain: "Advanced Forecasting",  labelSub: "Forecaster" },
+      { id: "snippet",    labelMain: "Bespoke Workflows",     labelSub: "Snippet Runner" },
+      { id: "thought",    labelMain: "Thought Development",   labelSub: "Conversation" }
+    ];
 
-<strong>Top 5 Tactics by Conversion Volume (62% of Spend)</strong><br>
-1) Brand Search Exact — Conversions: 1,120 — Spend: $34,200 — CPA: $30.54<br>
-2) Paid Social Prospecting — Conversions: 890 — Spend: $27,000 — CPA: $30.34<br>
-3) Brand Search Broad — Conversions: 620 — Spend: $14,700 — CPA: $23.71<br>
-4) Site Retargeting — Conversions: 410 — Spend: $12,500 — CPA: $30.49<br>
-5) Programmatic Contextual — Conversions: 345 — Spend: $9,600 — CPA: $27.83<br><br>
+    // Where per-tool demo files should register their scenarios
+    const REGISTRY = window.DWMS_DEMO_REGISTRY || {};
 
-<strong>Monthly (August 2025)</strong><br>
-- Spend: $502,000 — Conversions: 7,980 — CPA: $58.90<br>
-↳ vs 3M MA: $56.40 (↑ 4.4%) • vs 6M MA: $55.90 (↑ 5.4%)<br><br>
+    const MESSAGE_DELAY = 2600;      // between messages within a scenario
+    const SCENARIO_END_HOLD = 14000; // hold before auto-switch to next mode
 
-<strong>Decomposition by Tactic Bucket (abridged)</strong><br>
-- Brand Search: 36.9% Conversions • 31.5% Spend • CPA: $31.40<br>
-- Paid Social: 26.4% Conversions • 27.1% Spend • CPA: $34.60<br>
-- Programmatic: 17.2% Conversions • 20.3% Spend • CPA: $41.10`,
-        },
-        {
-          from: "sam",
-          ts: "9:14 AM",
-          text:
-            "Thanks. Can you break down Brand Search's performance specifically within that?",
-        },
-        {
-          from: "carlos",
-          ts: "9:14 AM",
-          text: `<strong>🔎 Brand Search — Weekly Snapshot (Week of 08/17/2025)</strong><br>
-- Spend: $48,900<br>
-- Conversions: 1,740<br>
-- CPA: $28.10<br>
-- Share of Spend: 38% • Share of Conversions: 44%<br>
-- Efficiency vs. Aggregate CPA: 50.5% better (aggregate = $56.70)<br><br>
-
-<strong>Breakout</strong><br>
-• <em>Brand Search Exact</em> — Spend: $34,200 • Conversions: 1,120 • CPA: $30.54<br>
-• <em>Brand Search Broad</em> — Spend: $14,700 • Conversions: 620 • CPA: $23.71<br><br>
-
-<strong>Trend</strong><br>
-CPA steady vs last 3 weeks (±2%), volume up ~6% w/w on stable spend.`,
-        },
-        {
-          from: "priya",
-          ts: "9:15 AM",
-          text: "Great. Please forecast next week for <em>Brand Search Exact</em> too.",
-        },
-        {
-          from: "carlos",
-          ts: "9:15 AM",
-          text: `<strong>🔮 Forecast — Brand Search Exact (t+1)</strong><br>
-Using a 3-week moving-average spend assumption:<br>
-- Total Checkout Starts (t+1): <strong>1,160.4</strong><br>
-- Total Conversions (t+1): <strong>610.7</strong><br>
-- Avg Cost to Acquire (CPA): <strong>$29.85</strong><br>
-Forecast week of <strong>08/24/2025</strong>.`,
-          attachments: [
-            {
-              url: ASSETS.forecast,
-              caption: "Forecast vs Fitted (t+1) — Brand Search Exact",
-            },
-          ],
-        },
-      ],
-    };
-
-    // 2) Naomi + Carlos: diagnostics only (heat map, histogram, scatter) — EXACT format from your single-scenario snippet
-    const SCENARIO_NAOMI = {
-      channel: "#carlos",
-      script: [
-        {
-          from: "naomi",
-          ts: "6:04 PM",
-          text:
-            '<span class="mention">@Carlos – Dark Wave</span> can you evaluate drivers of performance on our total conversion volume?',
-        },
-        {
-          from: "carlos",
-          ts: "6:04 PM",
-          text: "On it. I'll be right back with my findings.",
-        },
-        {
-          from: "carlos",
-          ts: "6:05 PM",
-          text:
-            "Currently, Brand Search and Social tactics are driving conversions, while acquisition costs are climbing in Programmatic, suppressing our total conversion count.",
-        },
-        {
-          from: "carlos",
-          ts: "6:06 PM",
-          text:
-            "Here’s the distribution and correlation matrix, with a fairly accurate regression model fit. I'd recommend that we evaluate shifting budget into top performing tactics. Would you like a full budget optimization recommendation?",
-          attachments: [
-            { url: ASSETS.hist, caption: "Histogram: Total Conversions" },
-            { url: ASSETS.corr, caption: "Correlation Matrix" },
-            { url: ASSETS.scatter, caption: "Predicted vs Actual Conversions" },
-          ],
-        },
-      ],
-    };
-
-    const SCENARIOS = [SCENARIO_PRIYA_SAM, SCENARIO_NAOMI];
-
-    // ---- Mount + UI Shell ----
     const mounts = document.querySelectorAll(".slack-demo");
     if (!mounts.length) return;
 
-    mounts.forEach((mount) => {
-      // Static chrome
-      mount.innerHTML = [
-        '<div class="sd-sidebar">',
-        '<div class="sd-org">🪐</div>',
-        '<div class="sd-nav">',
-        "<h4>Channels</h4>",
-        '<div class="sd-item active"><span class="sd-ic"></span><span class="sd-chan-label">#carlos</span></div>',
-        '<div class="sd-item"><span class="sd-ic"></span><span>#all-dark-wave</span></div>',
-        "<h4>Apps</h4>",
-        '<div class="sd-item"><span class="sd-ic"></span><span>Slackbot</span></div>',
-        '<div class="sd-item"><span class="sd-ic"></span><span>Carlos – Dark Wave</span></div>',
-        "</div>",
-        "</div>",
-        '<div class="sd-header">',
-        '<div class="sd-dots"><span class="sd-dot"></span><span class="sd-dot"></span><span class="sd-dot"></span></div>',
-        '<span class="sd-header-title">#carlos • Dark Wave Marketing Science</span>',
-        "</div>",
-        '<div class="sd-body">',
-        '<div class="sd-scroll"></div>',
-        '<button class="jump-bottom" title="Jump to latest" aria-label="Jump to latest">',
-        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">',
-        '<path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z"/>',
-        "</svg>",
-        "</button>",
-        "</div>",
-      ].join("");
+    mounts.forEach(function (mount) {
+      // --- State per mount ---
+      let autoplayOn = true;
+      let modeIndex = 0;
+      let currentScenario = null;
+      let msgIndex = 0;
+      let timer = null;
+      let started = false;
+
+      let replyCount = 0;
+      let dividerEl = null;
+      let dividerLabelEl = null;
+
+      // -----------------------------
+      // Build wrapper + mode tabs
+      // -----------------------------
+      function buildModeBar(wrapper) {
+        const bar = document.createElement("div");
+        bar.className = "sd-mode-bar";
+
+        const list = document.createElement("div");
+        list.className = "sd-tab-list";
+
+        MODES.forEach(function (mode, idx) {
+          const tab = document.createElement("button");
+          tab.type = "button";
+          tab.className = "sd-tab" + (idx === modeIndex ? " active" : "");
+          tab.setAttribute("data-mode-id", mode.id);
+
+          const main = document.createElement("span");
+          main.className = "sd-tab-label-main";
+          main.textContent = mode.labelMain;
+
+          const sub = document.createElement("span");
+          sub.className = "sd-tab-label-sub";
+          sub.textContent = mode.labelSub;
+
+          tab.appendChild(main);
+          tab.appendChild(sub);
+
+          tab.addEventListener("click", function () {
+            switchMode(idx, true);
+          });
+
+          list.appendChild(tab);
+        });
+
+        const right = document.createElement("div");
+        right.className = "sd-mode-right";
+
+        const lab = document.createElement("span");
+        lab.className = "sd-autoplay-label";
+        lab.textContent = "Autoplay";
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "sd-autoplay-toggle on";
+        toggle.setAttribute("aria-pressed", "true");
+
+        const knob = document.createElement("span");
+        knob.className = "sd-autoplay-toggle-knob";
+        toggle.appendChild(knob);
+
+        toggle.addEventListener("click", function () {
+          autoplayOn = !autoplayOn;
+          if (autoplayOn) {
+            toggle.classList.add("on");
+            toggle.setAttribute("aria-pressed", "true");
+          } else {
+            toggle.classList.remove("on");
+            toggle.setAttribute("aria-pressed", "false");
+          }
+        });
+
+        right.appendChild(lab);
+        right.appendChild(toggle);
+
+        bar.appendChild(list);
+        bar.appendChild(right);
+
+        wrapper.appendChild(bar);
+      }
+
+      // Wrap .slack-demo with .dwms-slack-wrap and inject the mode bar
+      (function wrapAndChrome() {
+        const wrapper = document.createElement("div");
+        wrapper.className = "dwms-slack-wrap";
+
+        const parent = mount.parentNode;
+        if (parent) {
+          parent.insertBefore(wrapper, mount);
+          wrapper.appendChild(mount);
+        }
+
+        // Insert mode tabs above the Slack box
+        wrapper.insertBefore(mount, null); // ensure Slack box is last child
+        buildModeBar(wrapper);
+
+        // Now build the Slack chrome inside the .slack-demo
+        mount.innerHTML = [
+          '<div class="sd-sidebar">',
+          '  <div class="sd-org">🪐</div>',
+          '  <div class="sd-nav">',
+          '    <h4>Channels</h4>',
+          '    <div class="sd-item active"><span class="sd-ic"></span><span class="sd-chan-label">#carlos</span></div>',
+          '    <div class="sd-item"><span class="sd-ic"></span><span>#all-dark-wave</span></div>',
+          '    <h4>Apps</h4>',
+          '    <div class="sd-item"><span class="sd-ic"></span><span>Slackbot</span></div>',
+          '    <div class="sd-item"><span class="sd-ic"></span><span>Carlos – Dark Wave</span></div>',
+          '  </div>',
+          '</div>',
+          '<div class="sd-header">',
+          '  <div class="sd-dots"><span class="sd-dot"></span><span class="sd-dot"></span><span class="sd-dot"></span></div>',
+          '  <span class="sd-header-title">#carlos • Dark Wave Marketing Science</span>',
+          '</div>',
+          '<div class="sd-body">',
+          '  <div class="sd-scroll"></div>',
+          '  <button class="jump-bottom" title="Jump to latest" aria-label="Jump to latest">',
+          '    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">',
+          '      <path fill-rule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z"/>',
+          '    </svg>',
+          '  </button>',
+          '</div>'
+        ].join("");
+
+        // Expose some refs for the rest of the logic
+      })();
 
       const scroll = mount.querySelector(".sd-scroll");
       const jump = mount.querySelector(".jump-bottom");
       const chanLabel = mount.querySelector(".sd-chan-label");
       const headerTitle = mount.querySelector(".sd-header-title");
 
-      // --- Jump-to-bottom ---
+      if (!scroll || !jump || !chanLabel || !headerTitle) return;
+
+      // -----------------------------
+      // Chrome helpers
+      // -----------------------------
+      function setChannelUI(channel) {
+        chanLabel.textContent = channel || "#carlos";
+        headerTitle.textContent = (channel || "#carlos") + " • Dark Wave Marketing Science";
+      }
+
       function isAtBottom() {
         return scroll.scrollHeight - (scroll.scrollTop + scroll.clientHeight) < 24;
       }
       function updateJump() {
-        isAtBottom() ? jump.classList.remove("show") : jump.classList.add("show");
+        if (isAtBottom()) {
+          jump.classList.remove("show");
+        } else {
+          jump.classList.add("show");
+        }
       }
       function smoothToBottom() {
         const start = scroll.scrollTop;
         const end = scroll.scrollHeight - scroll.clientHeight;
-        const dur = 600, t0 = performance.now();
+        const dur = 600;
+        const t0 = performance.now();
         function anim(t) {
           const p = Math.min((t - t0) / dur, 1);
           scroll.scrollTop = start + (end - start) * p;
@@ -203,8 +199,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
       jump.addEventListener("click", smoothToBottom);
       scroll.addEventListener("scroll", updateJump);
 
-      // --- Thread reply counter (per scenario) ---
-      let replyCount = 0, dividerEl = null, dividerLabelEl = null;
+      // Thread divider
       function resetThread() {
         replyCount = 0;
         dividerEl = null;
@@ -225,12 +220,12 @@ Forecast week of <strong>08/24/2025</strong>.`,
         updateJump();
       }
       function updateDivider() {
-        if (!dividerEl) return;
-        dividerLabelEl.textContent = replyCount === 1 ? "1 reply" : `${replyCount} replies`;
+        if (!dividerEl || !dividerLabelEl) return;
+        dividerLabelEl.textContent = replyCount === 1 ? "1 reply" : replyCount + " replies";
       }
 
-      // --- Avatars ---
-      const avatar = (who) => {
+      // Avatars and display names
+      function avatar(who) {
         const el = document.createElement("div");
         el.className = "avatar";
         if (who === "carlos") {
@@ -239,17 +234,31 @@ Forecast week of <strong>08/24/2025</strong>.`,
           img.alt = "Carlos – Dark Wave";
           el.appendChild(img);
         } else {
-          const initials =
-            who === "sam" ? "S" :
-            who === "priya" ? "P" :
-            who === "naomi" ? "N" : "?";
-          el.textContent = initials;
+          const initials = (who || "?")
+            .split(/\s+/)[0]
+            .charAt(0)
+            .toUpperCase();
+          el.textContent = initials || "?";
         }
         return el;
-      };
+      }
 
-      // --- Message add ---
+      function displayName(who) {
+        if (who === "carlos") return "Carlos – Dark Wave";
+        if (who === "nina") return "Nina L.";
+        if (who === "diego") return "Diego M.";
+        if (who === "amira") return "Amira K.";
+        if (who === "elena") return "Elena R.";
+        if (who === "jordan") return "Jordan B.";
+        if (who === "malik") return "Malik J.";
+        if (!who) return "";
+        return who.charAt(0).toUpperCase() + who.slice(1);
+      }
+
+      // Add a single message row
       function addMsg(item) {
+        if (!item) return;
+
         // Divider + counter only for Carlos messages
         if (item.from === "carlos") {
           if (!dividerEl) {
@@ -263,7 +272,7 @@ Forecast week of <strong>08/24/2025</strong>.`,
         }
 
         const row = document.createElement("div");
-        row.className = "msg from-" + item.from;
+        row.className = "msg from-" + (item.from || "user");
         row.appendChild(avatar(item.from));
 
         const content = document.createElement("div");
@@ -271,14 +280,10 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
         const head = document.createElement("div");
         head.className = "head";
+
         const nm = document.createElement("span");
         nm.className = "name";
-        nm.textContent =
-          item.from === "carlos" ? "Carlos – Dark Wave"
-          : item.from === "sam" ? "Sam T."
-          : item.from === "priya" ? "Priya N."
-          : item.from === "naomi" ? "Naomi I."
-          : item.from;
+        nm.textContent = displayName(item.from);
         head.appendChild(nm);
 
         if (item.from === "carlos") {
@@ -295,13 +300,13 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
         const p = document.createElement("p");
         p.className = "body-text";
-        p.innerHTML = item.text;
+        p.innerHTML = item.text || "";
 
         content.appendChild(head);
         content.appendChild(p);
 
-        if (item.attachments) {
-          item.attachments.forEach((a) => {
+        if (item.attachments && item.attachments.length) {
+          item.attachments.forEach(function (a) {
             const card = document.createElement("div");
             card.className = "attach";
             const img = document.createElement("img");
@@ -319,61 +324,79 @@ Forecast week of <strong>08/24/2025</strong>.`,
 
         row.appendChild(content);
         scroll.appendChild(row);
-        requestAnimationFrame(() => row.classList.add("show"));
+        requestAnimationFrame(function () { row.classList.add("show"); });
         updateJump();
       }
 
-      // --- Sequenced playback across scenarios ---
-      const MESSAGE_DELAY = 2800;             // delay between messages
-      const BETWEEN_SCENARIOS_DELAY = 0;      // remove lag between scenarios
-      const SCENARIO_END_HOLD = 12000;        // longer hold before clearing & switching
-      const REFRESH_DELAY = 20000;            // (kept if you ever need a wrap pause)
-
-      let scenarioIndex = 0, msgIndex = 0, started = false;
-
-      function setChannelUI(channel) {
-        const label = mount.querySelector(".sd-chan-label");
-        const title = mount.querySelector(".sd-header-title");
-        if (label) label.textContent = channel;
-        if (title) title.textContent = `${channel} • Dark Wave Marketing Science`;
+      // -----------------------------
+      // Playback logic
+      // -----------------------------
+      function clearTimer() {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
       }
 
       function playNextMessage() {
-        const scenario = SCENARIOS[scenarioIndex];
-        if (msgIndex >= scenario.script.length) {
-          // Scenario finished → HOLD, then wipe and immediately move to next (no inter-scenario lag)
-          setTimeout(() => {
-            scroll.innerHTML = "";
-            resetThread();
-            msgIndex = 0;
+        if (!currentScenario || !currentScenario.script || !currentScenario.script.length) return;
 
-            scenarioIndex = (scenarioIndex + 1) % SCENARIOS.length;
-            const nextScenario = SCENARIOS[scenarioIndex];
-            setChannelUI(nextScenario.channel);
-
-            // Start next scenario immediately after the hold
-            setTimeout(playNextMessage, BETWEEN_SCENARIOS_DELAY);
+        if (msgIndex >= currentScenario.script.length) {
+          // end of this scenario
+          if (!autoplayOn) return;
+          timer = setTimeout(function () {
+            const nextIndex = (modeIndex + 1) % MODES.length;
+            switchMode(nextIndex, false);
           }, SCENARIO_END_HOLD);
           return;
         }
 
-        addMsg(scenario.script[msgIndex++]);
-        setTimeout(playNextMessage, MESSAGE_DELAY);
+        addMsg(currentScenario.script[msgIndex++]);
+        timer = setTimeout(playNextMessage, MESSAGE_DELAY);
       }
 
-      function startIfVisible() {
-        if (started) return;
-        started = true;
-        setChannelUI(SCENARIOS[scenarioIndex].channel);
+      function switchMode(newIndex, fromClick) {
+        clearTimer();
+        modeIndex = newIndex;
+        msgIndex = 0;
+        scroll.innerHTML = "";
+        resetThread();
+
+        // Update active tab
+        const wrapper = mount.closest(".dwms-slack-wrap");
+        if (wrapper) {
+          const tabs = wrapper.querySelectorAll(".sd-tab");
+          tabs.forEach(function (tab, idx) {
+            tab.classList.toggle("active", idx === modeIndex);
+          });
+        }
+
+        const mode = MODES[modeIndex];
+        const scenario = REGISTRY[mode.id];
+
+        if (!scenario || !scenario.script || !scenario.script.length) {
+          currentScenario = null;
+          return;
+        }
+
+        currentScenario = scenario;
+        setChannelUI(scenario.channel || "#carlos");
         playNextMessage();
       }
 
+      function begin() {
+        if (started) return;
+        started = true;
+        switchMode(modeIndex, false);
+      }
+
+      // Start when visible
       if ("IntersectionObserver" in window) {
         const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
+          function (entries) {
+            entries.forEach(function (e) {
               if (e.isIntersecting && e.intersectionRatio >= 0.35) {
-                startIfVisible();
+                begin();
                 io.disconnect();
               }
             });
@@ -382,9 +405,8 @@ Forecast week of <strong>08/24/2025</strong>.`,
         );
         io.observe(mount);
       } else {
-        setTimeout(startIfVisible, 1000);
+        setTimeout(begin, 1000);
       }
     });
   });
 })();
-
