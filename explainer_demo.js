@@ -1,17 +1,25 @@
 // explainer_demo.js
 // Scenario spec for the "Driver Identification" (Explainer) demo.
-// A parent script is expected to render the Slack-like UI and play this script.
+// The shared multi-demo wrapper will read this from DWMS_DEMO_REGISTRY.explainer.
 
 (function () {
   "use strict";
 
-  // Static assets for this scenario (paths will be transformed to URLs by the host)
+  // Static assets for this scenario (hosted on GitHub)
   const ASSETS = {
-    rfImportance: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_rf_importance_1764024052969.png",
-    actualVsPred: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_avp_1764024052969.png",
-    residuals: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_residuals_1764024052969.png",
-    elasticities: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_elasticities_1764024052969.png",
-    coefs: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_coefs_1764024052969.png",
+    rfImportance:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_rf_importance_1764024052969.png",
+    actualVsPred:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_avp_1764024052969.png",
+    residuals:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_residuals_1764024052969.png",
+    elasticities:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_elasticities_1764024052969.png",
+    coefs:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_coefs_1764024052969.png",
+    // Screenshot of the Slack CSV upload preview
+    csvPreview:
+      "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/explainer_csv_preview.png",
   };
 
   /**
@@ -227,7 +235,15 @@
           ],
         ],
       },
-      reactions: ["eyes", "white_check_mark"],
+      // 👀 → ⏳ → ✅ reaction flow for the multi-demo wrapper
+      reactions: ["eyes", "hourglass_flowing_sand", "white_check_mark"],
+      // Show the CSV upload as a Slack-style screenshot
+      attachments: [
+        {
+          url: ASSETS.csvPreview,
+          caption: "sales_macro_2024-2025_to_date.csv — Slack preview",
+        },
+      ],
     },
 
     {
@@ -333,7 +349,7 @@
     },
   ];
 
-  // Register scenario on a global container for the parent wrapper.
+  // Register scenario on the shared registry that slack_multi_demo.js reads.
   window.DWMS_DEMO_REGISTRY = window.DWMS_DEMO_REGISTRY || {};
   window.DWMS_DEMO_REGISTRY.explainer = {
     id: "explainer",
