@@ -6,8 +6,8 @@
 
   // Static assets for this scenario (paths will be transformed to URLs by the host)
   const ASSETS = {
-    surveyCsv: "/mnt/data/dummy_exposure_survey.csv",
-    liftPlot: "/mnt/data/27debf49-f951-4463-8e42-74c2e8e70e45.png",
+    surveyCsv: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/mailer_aware_survey_response.csv",
+    liftPlot: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/figure_post_1.png",
   };
 
   /**

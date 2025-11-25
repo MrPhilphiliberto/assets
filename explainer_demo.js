@@ -7,11 +7,11 @@
 
   // Static assets for this scenario (paths will be transformed to URLs by the host)
   const ASSETS = {
-    rfImportance: "/mnt/data/de62a0b0-266d-40c8-9cdf-7410da877d3e.png",
-    actualVsPred: "/mnt/data/7c7f907f-bf7f-4e87-946b-19b8eb235d0a.png",
-    residuals: "/mnt/data/45d26478-4f95-4346-ab9c-52a5c078cc4b.png",
-    elasticities: "/mnt/data/55cfd6fa-d3cf-4946-9ac6-709fc2ef509d.png",
-    coefs: "/mnt/data/a2a7e753-cd55-40d2-9575-83769f2c5714.png",
+    rfImportance: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_rf_importance_1764024052969.png",
+    actualVsPred: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_avp_1764024052969.png",
+    residuals: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_residuals_1764024052969.png",
+    elasticities: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_elasticities_1764024052969.png",
+    coefs: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/expl_coefs_1764024052969.png",
   };
 
   /**

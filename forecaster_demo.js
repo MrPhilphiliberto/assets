@@ -7,7 +7,7 @@
 
   // Static assets for this scenario (the hosting layer will convert this path to a URL)
   const ASSETS = {
-    forecastRevenue: "/mnt/data/ddc82a9f-aca3-4eb6-8f35-b897f1c16a1e.png",
+    forecastRevenue: "https://raw.githubusercontent.com/MrPhilphiliberto/assets/main/forecaster_time_series%20plot.png",
   };
 
   /**
