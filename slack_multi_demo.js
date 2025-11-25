@@ -432,7 +432,16 @@
     // Determine which modes actually have demos defined
     const demosNow = getDemos();
     const modeKeys = MODES.filter((m) => demosNow[m.key]).map((m) => m.key);
-    if (!modeKeys.length) return null;
+    if (!modeKeys.length) {
+      console.warn("No demos found at init; waiting briefly for registration...");
+      setTimeout(() => {
+        const later = getDemos();
+        const modeKeysLate = MODES.filter((m) => later[m.key]).map((m) => m.key);
+        if (modeKeysLate.length) switchToMode(state, modeKeysLate[0]);
+      }, 1200);
+      return null;
+    }
+
 
     const state = {
       wrap: wrapEl,
@@ -457,8 +466,10 @@
     const tabList = document.createElement("div");
     tabList.className = "sd-tab-list";
 
+    const demosNowTabs = getDemos();
     MODES.forEach((m, idx) => {
-      if (!DEMOS[m.key]) return;
+    if (!demosNowTabs[m.key]) return;
+
       const tab = document.createElement("button");
       tab.type = "button";
       tab.className = "sd-tab";
@@ -512,7 +523,12 @@
     modeBar.appendChild(right);
 
 
-    wrapEl.insertBefore(modeBar, firstDemo);
+    if (firstDemo && firstDemo.parentNode === wrapEl) {
+      wrapEl.insertBefore(modeBar, firstDemo);
+    } else {
+      wrapEl.prepend(modeBar);
+    }
+
 
     // Lazy-start when wrap becomes visible
     function startIfVisible() {
@@ -538,7 +554,9 @@
       setTimeout(startIfVisible, 1000);
     }
 
+    updateAutoplayToggle(state);
     return state;
+
   }
 
   function updateAutoplayToggle(state) {
@@ -569,7 +587,9 @@
       clearTimeout(state.autoplayTimer);
     }
     state.autoplayTimer = setTimeout(() => {
+      if (!state.modeKeys || !state.modeKeys.length) return;
       const idx = state.modeKeys.indexOf(state.currentModeKey);
+
       const nextIdx = (idx + 1) % state.modeKeys.length;
       const nextKey = state.modeKeys[nextIdx];
       switchToMode(state, nextKey);
